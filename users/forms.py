@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm as DjangoPasswordChangeForm
 
 from users.models import Usuario
 from utils.models import Municipio
@@ -99,3 +98,29 @@ class UsuarioLoginForm(AuthenticationForm):
     class Meta:
         model = Usuario
         fields = ["username", "password"]
+
+
+class PasswordChangeForm(DjangoPasswordChangeForm):
+    """
+    Formulário para alteração de senha com estilos Bootstrap.
+    """
+    old_password = forms.CharField(
+        label="Senha atual",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control"},
+        ),
+    )
+    
+    new_password1 = forms.CharField(
+        label="Nova senha",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control"},
+        ),
+    )
+    
+    new_password2 = forms.CharField(
+        label="Confirme a nova senha",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control"},
+        ),
+    )

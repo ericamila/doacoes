@@ -1,53 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% extends 'base_general.html' %}
+{% extends 'base_general.html' %}
 {% load custom_filters %}
 {% load static %}
 
 {% block title %}
-  Doações - Login
+Doações - Login
 {% endblock %}
 
 {% block content %}
-  <div class="col-xl-5 col-xxl-4">
-    <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
-      <div class="auth-max-width col-sm-8 col-md-6 col-xl-7 px-4">
-        <h2 class="mb-1 fs-7 fw-bolder">Bem-vindo ao Doações</h2>
-        <p class="mb-4">Entre na sua conta para continuar</p>
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
-              {{ message }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-          {% endfor %}
-        {% endif %}
-        <form method="POST" action="{% url 'users:login' %}">
-          {% csrf_token %}
-          {% for field in form %}
+<div class="col-xl-5 col-xxl-4">
+  <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
+    <div class="auth-max-width col-sm-8 col-md-6 col-xl-7 px-4">
+      <div class="text-center mb-4">
+        <img src="{% static 'images/logos/logo.svg' %}" alt="Logo" height="60" class="mb-2">
+        <h2 class="mb-1 fs-7 fw-bolder text-primary">Bem-vindo ao Doações</h2>
+        <p class="text-muted">Entre na sua conta para continuar</p>
+      </div>
+      
+      {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+          <i class="ti {% if message.tags == 'success' %}ti-circle-check{% elif message.tags == 'error' %}ti-alert-circle{% else %}ti-info-circle{% endif %} me-1"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <form method="POST" action="{% url 'users:login' %}">
+            {% csrf_token %}
+            
             <div class="mb-3">
-              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-              {{ field|add_class:'form-control form-control-lg' }}
+              <label for="{{ form.username.id_for_label }}" class="form-label">
+                {{ form.username.label }}{% if form.username.field.required %}<span class="text-danger">*</span>{% endif %}
+              </label>
+              {{ form.username|add_class:'form-control form-control-lg' }}
+              {% if form.username.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.username.errors %}
+                <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                {% endfor %}
+              </div>
+              {% endif %}
             </div>
-          {% endfor %}
-          <div class="d-flex align-items-center justify-content-end mb-4">
-            <a class="text-primary fw-medium fs-3" href="#">Esqueceu a senha?</a>
-          </div>
-          <button class="btn btn-primary w-100 py-8 mb-4 rounded-2" type="submit">Entrar</button>
-          <div class="d-flex align-items-center justify-content-center">
-            <p class="fs-3 mb-0 fw-medium">Não tem uma conta?</p>
-            <a class="text-primary fw-medium ms-2 fs-3" href="{% url 'users:signup' %}">Solicite seu Cadastro</a>
-          </div>
-        </form>
+            
+            <div class="mb-3">
+              <label for="{{ form.password.id_for_label }}" class="form-label">
+                {{ form.password.label }}{% if form.password.field.required %}<span class="text-danger">*</span>{% endif %}
+              </label>
+              {{ form.password|add_class:'form-control form-control-lg' }}
+              {% if form.password.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.password.errors %}
+                <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            
+            <div class="d-flex align-items-center justify-content-end mb-4">
+              <a class="text-primary fw-medium" href="{% url 'users:password_change' %}">Esqueceu a senha?</a>
+            </div>
+            
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary py-8 rounded-2" type="submit">
+                <i class="ti ti-login me-1"></i> Entrar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4">
+        <p class="mb-0">Não tem uma conta? <a class="text-primary fw-medium" href="{% url 'users:signup' %}">Solicite seu Cadastro</a></p>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
-</title>
-</head>
-<body>
-
-</body>
-</html>

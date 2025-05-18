@@ -68,7 +68,7 @@ def edit(request, id):
     else:
         form = AccountabilityForm(instance=accountability)
 
-    return render(request, 'accountability/edit.html', {'form': form, 'accountability': accountability})
+    return accountability
 
 
 @login_required

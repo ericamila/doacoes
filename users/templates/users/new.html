@@ -10,35 +10,152 @@ Doações - Cadastro
 <div class="col-xl-5 col-xxl-4">
   <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
     <div class="auth-max-width col-sm-8 col-md-6 col-xl-7 px-4">
-      <h2 class="mb-1 fs-7 fw-bolder">Bem-vindo ao Doações</h2>
-      <p class="mb-4">Entre na sua conta para continuar</p>
-      {% if messages %}
-      {% for message in messages %}
-      <div
-        class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show"
-        role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="text-center mb-4">
+        <img src="{% static 'images/logos/logo.svg' %}" alt="Logo" height="60" class="mb-2">
+        <h2 class="mb-1 fs-7 fw-bolder text-primary">Bem-vindo ao Doações</h2>
+        <p class="text-muted">Cadastre-se para acessar o sistema</p>
       </div>
-      {% endfor %}
-      {% endif %}
-      <form method="POST" action="{% url 'users:signup' %}">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="mb-3">
-          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-          {{ field }}
-          <span class="text-danger fs-3">
-            {{ field.errors }}
-          </span>
+      
+      {% if messages %}
+      <div class="mb-4">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+          <i class="ti {% if message.tags == 'success' %}ti-circle-check{% elif message.tags == 'error' %}ti-alert-circle{% else %}ti-info-circle{% endif %} me-1"></i>
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         {% endfor %}
-        <button class="btn btn-primary w-100 py-8 mb-4 rounded-2" type="submit">Cadastrar</button>
-        <div class="d-flex align-items-center">
-          <p class="fs-4 mb-0 text-dark">Já tem uma conta?</p>
-          <a class="text-primary fw-medium ms-2" href="{% url 'users:login' %}">Entre por aqui</a>
+      </div>
+      {% endif %}
+      
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <form method="POST" action="{% url 'users:signup' %}">
+            {% csrf_token %}
+            
+            <div class="row">
+              <div class="col-12 mb-3">
+                <label for="{{ form.first_name.id_for_label }}" class="form-label">
+                  {{ form.first_name.label }}{% if form.first_name.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.first_name.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label">
+                  {{ form.email.label }}{% if form.email.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.email.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.password1.id_for_label }}" class="form-label">
+                  {{ form.password1.label }}{% if form.password1.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.password1.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if form.password1.help_text %}
+                <div class="form-text">
+                  <small>{{ form.password1.help_text }}</small>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.cpf.id_for_label }}" class="form-label">
+                  {{ form.cpf.label }}{% if form.cpf.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.cpf }}
+                {% if form.cpf.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.cpf.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.telefone.id_for_label }}" class="form-label">
+                  {{ form.telefone.label }}{% if form.telefone.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.telefone }}
+                {% if form.telefone.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.telefone.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.municipio.id_for_label }}" class="form-label">
+                  {{ form.municipio.label }}{% if form.municipio.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.municipio }}
+                {% if form.municipio.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.municipio.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+              
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.codigo_sei.id_for_label }}" class="form-label">
+                  {{ form.codigo_sei.label }}{% if form.codigo_sei.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ form.codigo_sei }}
+                {% if form.codigo_sei.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.codigo_sei.errors %}
+                  <small><i class="ti ti-alert-circle me-1"></i>{{ error }}</small>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2 mt-4">
+              <button class="btn btn-primary py-8 rounded-2" type="submit">
+                <i class="ti ti-user-plus me-1"></i> Cadastrar
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
+      
+      <div class="text-center mt-4">
+        <p class="mb-0">Já tem uma conta? <a class="text-primary fw-medium" href="{% url 'users:login' %}">Entre por aqui</a></p>
+      </div>
     </div>
   </div>
 </div>

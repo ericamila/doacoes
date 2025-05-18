@@ -1,4 +1,81 @@
-{% include "base.html" %}
+{% extends 'base.html' %}
+
 {% block content %}
-detalhe do usuário
-{% endblock content %}
+  {% include 'messages.html' %}
+
+  <div class="card">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Detalhes do Usuário</h5>
+      <div>
+        <a href="{% url 'users:lists' %}" class="btn btn-sm btn-light">Voltar</a>
+        {% if request.user.tipo_usuario == 0 %}
+          <a href="{% url 'users:edit' user.id %}" class="btn btn-sm btn-warning">Editar</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Nome Completo:</h6>
+          <p>{{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Email:</h6>
+          <p>{{ user.email }}</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">CPF:</h6>
+          <p>{{ user.cpf }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Telefone:</h6>
+          <p>{{ user.telefone }}</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Tipo de Usuário:</h6>
+          <p>{{ user.get_tipo_usuario_display }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Situação:</h6>
+          <p>
+            {% if user.situacao == 0 %}
+              <span class="badge bg-success">{{ user.get_situacao_display }}</span>
+            {% elif user.situacao == 1 %}
+              <span class="badge bg-danger">{{ user.get_situacao_display }}</span>
+            {% else %}
+              <span class="badge bg-warning">{{ user.get_situacao_display }}</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Código SEI:</h6>
+          <p>{{ user.codigo_sei }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Município:</h6>
+          <p>{{ user.municipios.nome|default:"Não informado" }}</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Data de Cadastro:</h6>
+          <p>{{ user.date_joined|date:"d/m/Y H:i" }}</p>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h6 class="fw-bold">Último Acesso:</h6>
+          <p>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca acessou" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

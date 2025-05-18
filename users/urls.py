@@ -2,7 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from . import views
-from .forms import UsuarioLoginForm, PasswordResetForm, SetPasswordForm
+from .forms import UsuarioLoginForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 
 app_name = "users"
 
@@ -19,31 +19,18 @@ urlpatterns = [
     
     # Rotas para reset de senha
     path("recuperar-senha/", 
-         auth_views.PasswordResetView.as_view(
-             template_name="registration/password_reset_form.html",
-             form_class=PasswordResetForm,
-             email_template_name="registration/password_reset_email.html",
-             success_url="/users/recuperar-senha/enviado/"
-         ), 
+         views.CustomPasswordResetView.as_view(), 
          name="password_reset"),
     
     path("recuperar-senha/enviado/", 
-         auth_views.PasswordResetDoneView.as_view(
-             template_name="registration/password_reset_done.html"
-         ), 
+         views.CustomPasswordResetDoneView.as_view(), 
          name="password_reset_done"),
     
     path("recuperar-senha/<uidb64>/<token>/", 
-         auth_views.PasswordResetConfirmView.as_view(
-             template_name="registration/password_reset_confirm.html",
-             form_class=SetPasswordForm,
-             success_url="/users/recuperar-senha/concluido/"
-         ), 
+         views.CustomPasswordResetConfirmView.as_view(), 
          name="password_reset_confirm"),
     
     path("recuperar-senha/concluido/", 
-         auth_views.PasswordResetCompleteView.as_view(
-             template_name="registration/password_reset_complete.html"
-         ), 
+         views.CustomPasswordResetCompleteView.as_view(), 
          name="password_reset_complete"),
 ]

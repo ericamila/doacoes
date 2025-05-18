@@ -3,8 +3,15 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UsuarioForm, PasswordChangeForm
+from django.contrib.auth.views import (
+    PasswordResetView, 
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView
+)
+from .forms import UsuarioForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.urls import reverse_lazy
 
 Usuario = get_user_model()  # Obtém o modelo de usuário personalizado
 
@@ -145,6 +152,11 @@ def detail(request, pk):
 @login_required
 def edit(request, pk):
     user = get_object_or_404(Usuario, pk=pk)
+    
+    # Verificar se o usuário atual é administrador ou está editando seu próprio perfil
+    if not (request.user.is_superuser or request.user.is_staff) and request.user.pk != user.pk:
+        messages.error(request, "Você não tem permissão para editar este usuário.")
+        return redirect("users:lists")
 
     if request.method == "POST":
         form = UsuarioForm(request.POST, instance=user)
@@ -153,7 +165,9 @@ def edit(request, pk):
             messages.success(request, "Usuário atualizado com sucesso.")
             return redirect("users:lists")
         else:
-            messages.error(request, "Erro ao atualizar o usuário. Verifique os campos.")
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Erro no campo {field}: {error}")
     else:
         form = UsuarioForm(instance=user)
 
@@ -169,7 +183,59 @@ def edit(request, pk):
 @login_required
 def remove(request, pk):
     user = get_object_or_404(Usuario, pk=pk)
+    
+    # Verificar se o usuário atual é administrador
+    if not (request.user.is_superuser or request.user.is_staff):
+        messages.error(request, "Você não tem permissão para remover usuários.")
+        return redirect("users:lists")
+        
     user.removido_em = timezone.now()
     user.save()
     messages.success(request, "Usuário removido com sucesso.")
     return redirect("users:lists")
+
+# Views customizadas para reset de senha
+class CustomPasswordResetView(PasswordResetView):
+    """
+    View customizada para solicitação de recuperação de senha.
+    """
+    template_name = 'registration/password_reset_form.html'
+    form_class = PasswordResetForm
+    email_template_name = 'registration/password_reset_email.html'
+    success_url = reverse_lazy('users:password_reset_done')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Um email com instruções para redefinir sua senha foi enviado.")
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, "Erro ao solicitar redefinição de senha. Verifique o email informado.")
+        return super().form_invalid(form)
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    """
+    View customizada para confirmação de envio de email de recuperação de senha.
+    """
+    template_name = 'registration/password_reset_done.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    """
+    View customizada para confirmação de nova senha.
+    """
+    template_name = 'registration/password_reset_confirm.html'
+    form_class = SetPasswordForm
+    success_url = reverse_lazy('users:password_reset_complete')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Sua senha foi alterada com sucesso.")
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, "Erro ao redefinir senha. Verifique os campos.")
+        return super().form_invalid(form)
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    """
+    View customizada para confirmação de alteração de senha.
+    """
+    template_name = 'registration/password_reset_complete.html'

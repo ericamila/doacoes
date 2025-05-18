@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
+from django.urls import reverse
 from plans.models import Plan
 from accountability.forms import DocumentForm, AccountabilityForm
 from accountability.models import Document, Accountability
@@ -44,6 +45,7 @@ def new(request, id):
 @login_required
 def edit(request, id):
     accountability = get_object_or_404(Accountability, pk=id)
+    plan_id = accountability.plan.id
 
     if request.method == "POST":
         form = AccountabilityForm(request.POST, request.FILES, instance=accountability)
@@ -62,29 +64,32 @@ def edit(request, id):
                 )
 
             messages.success(request, "Prestação de Contas atualizada com sucesso.")
+            return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
         else:
             messages.error(request, "Erro ao atualizar o relatório de gestão. Verifique os campos.")
+            return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
 
-    else:
-        form = AccountabilityForm(instance=accountability)
-
-    return accountability
+    # Se for GET, redireciona para a página de detalhes do plano com o modal aberto
+    return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
 
 
 @login_required
-def remover_accountability(request, id):
+def remove(request, id):
     accountability = get_object_or_404(Accountability, pk=id)
+    plan_id = accountability.plan.id
 
     if request.method == "POST":
         accountability.removido_em = datetime.now()
         accountability.save()
-
-    return accountability
+        messages.success(request, "Prestação de Contas removida com sucesso.")
+    
+    return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
 
 
 @login_required
 def register_document(request, accountability_id):
     accountability = get_object_or_404(Accountability, pk=accountability_id)
+    plan_id = accountability.plan.id
 
     if request.method == "POST":
         form = DocumentForm(request.POST, request.FILES)
@@ -101,13 +106,15 @@ def register_document(request, accountability_id):
                     documento.save()
                 except Exception as e:
                     messages.error(request, f"Erro ao salvar o arquivo {arquivo.name}.")
-            # TODO: verificar retornos e redirecionamentos
-            return redirect("/planos-de-acao/plano-de-acao.html#accountability")
+            
+            messages.success(request, "Documentos adicionados com sucesso.")
+            return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
         else:
             messages.error(request, form.errors)
+            return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
     else:
         form = DocumentForm()
-    # return form
+    
     return render(request, "accountability/modal_registrar_accountability.html", {"form": form, "accountability": accountability})
 
 

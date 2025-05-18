@@ -18,6 +18,7 @@ class UsuarioForm(UserCreationForm):
 
     password1 = forms.CharField(
         label="Senha",
+        required=False,
         widget=forms.PasswordInput(
             attrs={"class": "form-control"},
         ),
@@ -69,6 +70,7 @@ class UsuarioForm(UserCreationForm):
             "telefone",
             "municipio",
             "codigo_sei",
+            "situacao",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -76,10 +78,20 @@ class UsuarioForm(UserCreationForm):
         # Remove o campo password2
         self.fields.pop("password2", None)
         
+        # Adiciona o campo de situação
+        self.fields['situacao'] = forms.ChoiceField(
+            label="Situação",
+            choices=Usuario._meta.get_field('situacao').choices,
+            widget=forms.Select(attrs={"class": "form-select"}),
+        )
+        
         # Se estiver editando um usuário existente
         if self.instance and self.instance.pk:
-            # Torna o campo de email somente leitura
-            self.fields['email'].widget.attrs['readonly'] = True
+            # Torna o campo de senha opcional
+            self.fields['password1'].required = False
+            
+            # Preenche o campo de situação com o valor atual
+            self.initial['situacao'] = self.instance.situacao
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -90,6 +102,33 @@ class UsuarioForm(UserCreationForm):
         if Usuario.objects.filter(username=email).exists():
             raise forms.ValidationError("Este email já está cadastrado.")
         return email
+        
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        
+        # Se estiver editando um usuário existente
+        if self.instance and self.instance.pk:
+            # Atualiza os campos
+            user.first_name = self.cleaned_data.get('first_name')
+            user.cpf = self.cleaned_data.get('cpf')
+            user.telefone = self.cleaned_data.get('telefone')
+            user.municipio = self.cleaned_data.get('municipio')
+            user.codigo_sei = self.cleaned_data.get('codigo_sei')
+            user.situacao = self.cleaned_data.get('situacao')
+            
+            # Só atualiza a senha se uma nova senha foi fornecida
+            password = self.cleaned_data.get('password1')
+            if password:
+                user.set_password(password)
+        else:
+            # Novo usuário
+            user.username = self.cleaned_data.get('email')
+            user.email = self.cleaned_data.get('email')
+            user.set_password(self.cleaned_data.get('password1'))
+            
+        if commit:
+            user.save()
+        return user
 
 
 class UsuarioLoginForm(AuthenticationForm):

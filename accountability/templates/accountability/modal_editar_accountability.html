@@ -12,35 +12,34 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="mb-3">
-                  <label class="form-label" for="valor_executado{{ accountability.id }}">Valor Executado</label>
+                  <label class="form-label" for="valor_executado_edit{{ accountability.id }}">Valor Executado</label>
                   <input type="number" class="form-control"
                     id="valor_executado_edit{{ accountability.id }}"
                     name="valor_executado"
                     value="{{ accountability.valor_executado|stringformat:'.2f' }}"
                     step="0.01" min="0" 
-                    style="cursor: default; autofocus: true; caret-color: #3C3C3C;"/>
+                    style="cursor: default; caret-color: #3C3C3C;"/>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="mb-3">
-                  <label class="form-label" for="natureza_despesa{{ accountability.id }}">Natureza da Despesa</label>                  
+                  <label class="form-label" for="natureza_despesa_edit{{ accountability.id }}">Natureza da Despesa</label>                  
                   <select class="form-select" id="natureza_despesa_edit{{ accountability.id }}" name="natureza_despesa">
                     {% for key, value in accountability_form.natureza_despesa.field.choices %}
                       <option value="{{ key }}" {% if accountability.natureza_despesa == key %}selected{% endif %}>{{ value }}</option>
                     {% endfor %}
                   </select>
-
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label class="form-label" for="executor{{ accountability.id }}">*Executor</label>
+                  <label class="form-label" for="executor_edit{{ accountability.id }}">*Executor</label>
                   <input type="text" class="form-control" id="executor_edit{{ accountability.id }}" name="executor" value="Executor(provisório)" />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mb-3">
-                  <label for="arquivos{{ accountability.id }}" class="form-label">Selecione os arquivos*</label>
+                  <label for="arquivos_edit{{ accountability.id }}" class="form-label">Selecione os arquivos*</label>
                   <div class="d-flex align-items-center">
                     <input type="file" id="arquivos_edit{{ accountability.id }}" name="arquivos" multiple class="form-control arquivo-edit" data-accountability-id="{{ accountability.id }}" />
                     <button type="button" id="add-file_edit{{ accountability.id }}" class="btn btn-secondary ms-2 add-file-edit" data-accountability-id="{{ accountability.id }}">+</button>
@@ -59,8 +58,8 @@
               </div>
               <div>
                 <div class="mb-3">
-                  <label class="form-label" for="descricao{{ accountability.id }}">{{ accountability_form.descricao.label }}</label>
-                  <textarea class="form-control" id="descricao_edit{{ accountability.id }}" name="descricao" rows="3" style="cursor: default; autofocus: true; caret-color: #3C3C3C;">{{ accountability.descricao }}</textarea>
+                  <label class="form-label" for="descricao_edit{{ accountability.id }}">{{ accountability_form.descricao.label }}</label>
+                  <textarea class="form-control" id="descricao_edit{{ accountability.id }}" name="descricao" rows="3" style="cursor: default; caret-color: #3C3C3C;">{{ accountability.descricao }}</textarea>
                 </div>
               </div>
             </div>
@@ -72,3 +71,24 @@
         </section>
       </div>
     </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Garantir que o modal {{ accountability.id }} seja inicializado corretamente
+  var modal{{ accountability.id }} = document.getElementById('editaraccountability{{ accountability.id }}');
+  if (modal{{ accountability.id }}) {
+    modal{{ accountability.id }}.addEventListener('shown.bs.modal', function () {
+      document.getElementById('valor_executado_edit{{ accountability.id }}').focus();
+    });
+  }
+  
+  // Manipulação de arquivos para o modal {{ accountability.id }}
+  var addFileBtn{{ accountability.id }} = document.getElementById('add-file_edit{{ accountability.id }}');
+  if (addFileBtn{{ accountability.id }}) {
+    addFileBtn{{ accountability.id }}.addEventListener('click', function() {
+      document.getElementById('arquivos_edit{{ accountability.id }}').click();
+    });
+  }
+});
+</script>

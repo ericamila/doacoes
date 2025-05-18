@@ -7,7 +7,10 @@ from django.urls import reverse
 from plans.models import Plan
 from accountability.forms import DocumentForm, AccountabilityForm
 from accountability.models import Document, Accountability
+import logging
 
+# Configurar logging
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def lists(request):
@@ -37,7 +40,7 @@ def new(request, id):
         return accountability
 
     except Exception as e:
-        print(f"Erro ao criar plano de ação: {e}")
+        logger.error(f"Erro ao criar plano de ação: {e}")
         messages.error(request, "Erro ao criar relatório de gestão.")
         return None
 
@@ -48,24 +51,41 @@ def edit(request, id):
     plan_id = accountability.plan.id
 
     if request.method == "POST":
-        form = AccountabilityForm(request.POST, request.FILES, instance=accountability)
+        form = AccountabilityForm(request.POST, instance=accountability)
 
         if form.is_valid():
             form.save()
 
+            # Verificar se há arquivos no request
+            logger.info(f"FILES: {request.FILES}")
+            logger.info(f"POST: {request.POST}")
+            
             # Adicionar novos arquivos
-            arquivos = request.FILES.getlist('arquivos')
-            for arquivo in arquivos:
-                Document.objects.create(
-                    accountability=accountability,
-                    caminho=arquivo,
-                    nome=arquivo.name,
-                    tamanho=arquivo.size,
-                )
+            if 'arquivos' in request.FILES:
+                arquivos = request.FILES.getlist('arquivos')
+                logger.info(f"Arquivos encontrados: {len(arquivos)}")
+                
+                for arquivo in arquivos:
+                    try:
+                        logger.info(f"Processando arquivo: {arquivo.name}, tamanho: {arquivo.size}")
+                        documento = Document(
+                            accountability=accountability,
+                            caminho=arquivo,
+                            nome=arquivo.name,
+                            tamanho=arquivo.size,
+                        )
+                        documento.save()
+                        logger.info(f"Arquivo salvo com sucesso: {arquivo.name}")
+                    except Exception as e:
+                        logger.error(f"Erro ao salvar arquivo {arquivo.name}: {e}")
+                        messages.error(request, f"Erro ao salvar o arquivo {arquivo.name}: {e}")
+            else:
+                logger.warning("Nenhum arquivo encontrado no request")
 
             messages.success(request, "Prestação de Contas atualizada com sucesso.")
             return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
         else:
+            logger.error(f"Erros de formulário: {form.errors}")
             messages.error(request, "Erro ao atualizar o relatório de gestão. Verifique os campos.")
             return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')
 

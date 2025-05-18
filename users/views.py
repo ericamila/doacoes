@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
+from datetime import timezone
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import UsuarioForm, PasswordChangeForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 Usuario = get_user_model()  # Obtém o modelo de usuário personalizado
 
@@ -54,12 +56,6 @@ def signup_view(request):
 def profile_view(request):
     """
     Função para visualização e edição do perfil do usuário logado.
-    
-    Args:
-        request: Objeto HttpRequest
-        
-    Returns:
-        HttpResponse: Renderiza o template de perfil
     """
     user = request.user
     
@@ -87,12 +83,6 @@ def profile_view(request):
 def password_change_view(request):
     """
     Função para alteração de senha do usuário logado.
-    
-    Args:
-        request: Objeto HttpRequest
-        
-    Returns:
-        HttpResponse: Renderiza o template de alteração de senha ou redireciona para perfil
     """
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
@@ -112,3 +102,74 @@ def password_change_view(request):
             "form": form,
         },
     )
+
+@login_required
+def lists(request):
+    users = Usuario.objects.filter(removido_em=None)
+    obj = request.GET.get("obj")  # Implementa o mecanismo de busca
+
+    if obj:
+        # Busca por email ou nome
+        users = users.filter(email__icontains=obj) | users.filter(first_name__icontains=obj)
+        # Busca por situação textual
+        situacoes = dict(Usuario._meta.get_field('situacao').choices)
+        situacao_map = {v.lower(): k for k, v in situacoes.items()}
+        obj_lower = obj.lower()
+        if obj_lower in situacao_map:
+            users = users | Usuario.objects.filter(situacao=situacao_map[obj_lower])
+    else:
+        users = users.order_by('first_name')
+
+    paginator = Paginator(users, 10)  # Define 10 itens fixos por página
+    page_number = request.GET.get("page")
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except (PageNotAnInteger, EmptyPage):
+        page_obj = paginator.get_page(1)
+
+    return render(
+        request,
+        "users/list.html",
+        {
+            "users": page_obj,
+            "page_obj": page_obj,
+        },
+    )
+
+@login_required
+def detail(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    return render(request, "users/detail.html", {"user": user})
+
+@login_required
+def edit(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+
+    if request.method == "POST":
+        form = UsuarioForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Usuário atualizado com sucesso.")
+            return redirect("users:lists")
+        else:
+            messages.error(request, "Erro ao atualizar o usuário. Verifique os campos.")
+    else:
+        form = UsuarioForm(instance=user)
+
+    return render(
+        request,
+        "users/edit.html",
+        {
+            "form": form,
+            "user": user,
+        },
+    )
+
+@login_required
+def remove(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    user.removido_em = timezone.now()
+    user.save()
+    messages.success(request, "Usuário removido com sucesso.")
+    return redirect("users:lists")

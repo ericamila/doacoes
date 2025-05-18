@@ -67,7 +67,7 @@
     <ul class="sidebarnav mb-0">
       {% if request.user.is_authenticated and user|admin %}
       <li class="sidebar-item">
-        <a class="sidebar-link" href="#" aria-expanded="false">
+        <a class="sidebar-link" href="{% url 'users:lists' %}" aria-expanded="false">
           <span>
             <i class="ti ti-users"></i>
           </span>

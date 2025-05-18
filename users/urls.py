@@ -12,4 +12,8 @@ urlpatterns = [
     path("sair/", auth_views.LogoutView.as_view(), name="logout"),
     path("perfil/", views.profile_view, name="profile"),
     path("alterar-senha/", views.password_change_view, name="password_change"),
+    path("usuarios/", views.lists, name="lists"),
+    path("usuarios/<int:pk>/", views.detail, name="detail"),
+    path("usuarios/<int:pk>/editar/", views.edit, name="edit"),
+    path("usuarios/<int:pk>/deletar/", views.remove, name="remove"),
 ]

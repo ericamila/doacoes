@@ -145,3 +145,5 @@ LOGIN_REDIRECT_URL = "projects:lists"
 LOGIN_URL = "users:login"
 
 LOGOUT_REDIRECT_URL = LOGIN_URL
+
+AUTH_USER_MODEL = 'users.Usuario'

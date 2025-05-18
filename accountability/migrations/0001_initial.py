@@ -27,8 +27,8 @@ class Migration(migrations.Migration):
                 ('plan', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='plans.plan')),
             ],
             options={
-                'verbose_name': 'Relatório de Gestão',
-                'verbose_name_plural': 'Relatórios de Gestão',
+                'verbose_name': 'Prestação de Contas',
+                'verbose_name_plural': 'Prestação de Contas',
                 'db_table': 'accountabilities',
             },
         ),
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nome', models.CharField(max_length=255)),
-                ('caminho', models.FileField(upload_to=accountability.models.upload_to_relatorio)),
+                ('caminho', models.FileField(upload_to=accountability.models.upload_to_accountability)),
                 ('tamanho', models.IntegerField(blank=True)),
                 ('removido_em', models.DateTimeField(blank=True, null=True)),
                 ('accountability', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accountability.accountability')),

@@ -1,9 +1,9 @@
 {% load custom_filters %}       
         <article class="tab-pane fade show active" id="dados-basicos" role="tabpanel" aria-labelledby="dados-basicos-tab" tabindex="0">
-          <h4 class="card-title mb-3">Dados do Programa</h4>
+          <h4 class="card-title mb-3">Dados do Projeto</h4>
 
           <div id="campos" class="row">
-            {% for field in programa %}
+            {% for field in projects %}
               <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
                 <div class="mb-3">
                   <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -16,41 +16,41 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">Beneficiário</label>
-              <input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar.municipio }}" />
+              <input type="text" class="form-control" value="{{ plan.proposal.municipio }}" />
             </div>
             <div class="col-md-6">
               <label class="form-label">Código IBGE</label>
-              <input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar.municipio.codigo }}" />
+              <input type="text" class="form-control" value="{{ plan.proposal.municipio.codigo }}" />
             </div>
           </div>
 
           <div class="row mb-3">
             <div class="col-md-4">
               <label class="form-label">Banco</label>
-              <input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar.conta_bancaria.banco }}" />
+              <input type="text" class="form-control" value="{{ plan.proposal.conta_bancaria.banco }}" />
             </div>
             <div class="col-md-4">
               <label class="form-label">Agência</label>
-              <input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar.conta_bancaria.agencia }}" />
+              <input type="text" class="form-control" value="{{ plan.proposal.conta_bancaria.agencia }}" />
             </div>
             <div class="col-md-4">
               <label class="form-label">Conta</label>
-              <input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar.conta_bancaria.conta }}" />
+              <input type="text" class="form-control" value="{{ plan.proposal.conta_bancaria.conta }}" />
             </div>
           </div>
 
           <div class="row mb-4">
             <div class="col-md-6">
-              <label class="form-label">Emenda Parlamentar</label>
-              <a href="#"><input type="text" class="form-control" value="{{ plano_de_acao.emenda_parlamentar }}" /></a>
+              <label class="form-label">Proposta</label>
+              <a href="#"><input type="text" class="form-control" value="{{ plan.proposal }}" /></a>
             </div>
             <div class="col-md-3">
               <label class="form-label">Valor de Custeio</label>
-              <input type="text" class="form-control" placeholder="{{ plano_de_acao.emenda_parlamentar.valor_custeio|currency }}" />
+              <input type="text" class="form-control" placeholder="{{ plan.proposal.valor_custeio|currency }}" />
             </div>
             <div class="col-md-3">
               <label class="form-label">Valor de Investimento</label>
-              <input type="text" class="form-control" placeholder="{{ plano_de_acao.emenda_parlamentar.valor_investimento|currency }}" />
+              <input type="text" class="form-control" placeholder="{{ plan.proposal.valor_investimento|currency }}" />
             </div>
           </div>
 

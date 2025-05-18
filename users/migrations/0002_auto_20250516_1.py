@@ -10,14 +10,18 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-
+        migrations.AddField(
+            model_name='usuario',
+            name='codigo_sei',
+            field=models.CharField(blank=True, max_length=50, null=True),
+        ),
         migrations.AlterField(
-            model_name='Usuario',
+            model_name='usuario',
             name='situacao',
             field=models.CharField(choices=[(0, 'Ativo'), (1, 'Inativo'), (2, 'Pendente'), (3, 'Bloqueado')], default=2, max_length=10),
         ),
         migrations.AlterField(
-            model_name='Usuario',
+            model_name='usuario',
             name='tipo_usuario',
             field=models.CharField(choices=[(0, 'Administrador'), (1, 'Representante de Município')], default=1, max_length=10),
         ),

@@ -23,30 +23,30 @@
                       <h6 class="fs-4 fw-semibold mb-0">Data</h6>
                     </th>
                     <th>
-                      <h6 class="fs-4 fw-semibold mb-0">Processo SEI</h6>
+                      <h6 class="fs-4 fw-semibold mb-0">Processo</h6>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for empenho in empenhos %}
+                  {% for commitment in commitments %}
                     <tr>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.codigo }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.codigo }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.valor|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.valor|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.valor_estornado|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.valor_estornado|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.get_situacao_display }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.get_situacao_display }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.data }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.data }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ empenho.processo_sei }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ commitment.processo }}</p>
                       </td>
                     </tr>
                   {% empty %}
@@ -85,25 +85,25 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for liquidacao in liquidacoes %}
+                  {% for settlement in settlements %}
                     <tr>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.codigo }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.codigo }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.valor|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.valor|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.valor_estornado|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.valor_estornado|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.get_situacao_display }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.get_situacao_display }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.data }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.data }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.empenho.codigo }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ settlement.commitment.codigo }}</p>
                       </td>
                     </tr>
                   {% empty %}
@@ -145,33 +145,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for pagamento in pagamentos %}
+                  {% for payment in payments %}
                     <tr>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.codigo }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.codigo }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.valor|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.valor|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.valor_estornado|currency }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.valor_estornado|currency }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.get_situacao_display }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.get_situacao_display }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.ordem_bancaria }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.ordem_bancaria }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.data }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.data }}</p>
                       </td>
                       <td>
-                        <p class="mb-0 fw-normal fs-4">{{ pagamento.liquidacao.codigo }}</p>
+                        <p class="mb-0 fw-normal fs-4">{{ payment.settlement.codigo }}</p>
                       </td>
                     </tr>
                   {% empty %}
                     <tr>
-                      <td colspan="6" class="text-center">Nenhum pagamento encontrado</td>
+                      <td colspan="6" class="text-center">Nenhum payment encontrado</td>
                     </tr>
                   {% endfor %}
                 </tbody>

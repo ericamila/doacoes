@@ -39,7 +39,7 @@ def detail(request, id):
     project = get_object_or_404(Project, pk=id)
     form = ProjectForm(instance=project)
 
-    # Emendas vinculadas ao project
+    # Propostas vinculadas ao project
     proposals = Proposal.objects.filter(removido_em=None, project=project)
 
     return render(
@@ -60,7 +60,7 @@ def new(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Project enviado com sucesso!")
-            return redirect("new")
+            return redirect("projects:new")
         else:
             messages.error(request, "Erro ao salvar o project. Verifique os campos.")
     else:

@@ -9,14 +9,14 @@
         <h1 class="card-title mb-0">Pagamentos</h1>
       </div>
 
-      <form class="d-flex gap-3 mt-2" action="{% url 'payment:lists' %}" method="GET">
+      <form class="d-flex gap-3 mt-2" action="{% url 'payments:lists' %}" method="GET">
         <div class="input-group border rounded-1">
           <span class="input-group-text bg-transparent px-6 border-0" id="basic-addon1"><i class="ti ti-search fs-6"></i></span>
           <input name="obj" type="text" value="{{ request.GET.obj }}" class="form-control border-0 ps-2" placeholder="Digite o código ou situação" />
         </div>
 
         {% if request.GET.obj %}
-          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'payments:ler_payments' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
+          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'payments:lists' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
         {% endif %}
 
         <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center p-2" style="width: 40px; height: 40px;"><i class="ti ti-filter fs-7"></i></button>
@@ -40,7 +40,7 @@
             {% for payment in payments %}
               <tr>
                 <td>{{ payment.codigo }}</td>
-                <td>{{ payment.liquidacao.codigo }}</td>
+                <td>{{ payment.settlement.codigo }}</td>
                 <td>{{ payment.ordem_bancaria }}</td>
                 <td>{{ payment.valor|currency }}</td>
                 <td>{{ payment.valor_estornado|currency }}</td>
@@ -48,13 +48,13 @@
                 <td>{{ payment.data|date:"d/m/Y" }}</td>  
                 <td>
                   <div class="d-flex gap-2 align-items-center justify-content-center">
-                    <a href="{% url 'payments:ler_payment' payment.id %}" title="Detalhar">{% include 'partials/icons/detalhar.html' %}</a>
+                    <a href="{% url 'payments:detail' payment.id %}" title="Detalhar">{% include 'partials/icons/detalhar.html' %}</a>
                   </div>
                 </td>
               </tr>
             {% empty %}
               <tr>
-                <td colspan="8" class="text-center">Nenhum payment encontrado</td>
+                <td colspan="8" class="text-center">Nenhum pagamento encontrado</td>
               </tr>
             {% endfor %}
           </tbody>

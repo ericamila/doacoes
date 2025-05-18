@@ -6,7 +6,7 @@ from proposals.models import Proposal
 class ProposalForm(forms.ModelForm):
     class Meta:
         model = Proposal
-        exclude = ["removido_em", "conta_bancaria", "ciente", "sei_remocao_ciente", "data_remocao_ciente",
+        exclude = ["removido_em", "conta_bancaria", "ciente", "processo_remocao_ciente", "data_remocao_ciente",
                    "data_ciencia"]  # Exclui os campos do formulário
         labels = {
             "ano": "Ano",
@@ -34,7 +34,7 @@ class ProposalForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             self.fields["ano"].initial = self.instance.ano
             self.fields["codigo"].initial = self.instance.codigo
-            self.fields["project"].initial = self.instance.programa
+            self.fields["project"].initial = self.instance.project
             self.fields["valor_custeio"].initial = self.instance.valor_custeio
             self.fields["valor_investimento"].initial = self.instance.valor_investimento
             self.fields["parlamentar"].initial = self.instance.parlamentar

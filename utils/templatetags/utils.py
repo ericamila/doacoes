@@ -7,7 +7,7 @@ words_dict = {
     "liquidacoes": "liquidações",
     "gestao": "gestão",
     "ciencia": "ciência",
-    "relatorio": "relatório",
+    "accountability": "relatório",
 }
 
 register = template.Library()

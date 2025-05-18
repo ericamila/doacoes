@@ -13,6 +13,8 @@ from accountability.views import new
 from utils.models import PoliticaPublica
 from django.contrib import messages
 from google_sheets_utils import load_data_from_sheets
+from accountability.views import new as new_accountability
+
 
 
 def lists(request):
@@ -34,15 +36,11 @@ def lists(request):
     except (PageNotAnInteger, EmptyPage):
         page_obj = paginator.get_page(1)
 
-    for p in page_obj:
-        print("id IIIIIII :", p.proposal.project.id)
-
-    print("OIOIOIOI")
     return render(
         request,
-        "plans/detail.html",
+        "plans/list.html",
         {
-            "plan": page_obj,
+            "plans": page_obj,
             "page_obj": page_obj,
         }
     )
@@ -95,18 +93,18 @@ def detail(request, id):
 
 
 @login_required
-def new(request, emenda_id, politicas):
+def new(request, proposal_id, politicas):
     try:
-        emenda = get_object_or_404(Proposal, pk=emenda_id)
+        proposal = get_object_or_404(Proposal, pk=proposal_id)
 
-        # cria um novo plano de ação associado a uma emenda parlamentar
+        # cria um novo Plano associado a uma proposal 
         plan = Plan.objects.create(
-            codigo=f"{emenda.ano}{emenda.id}-{emenda.programa.id}-{emenda.parlamentar.id}",  # TODO: ALTERAR A LÓGICA
+            codigo=f"{proposal.ano}{proposal.id}-{proposal.project.id}-{proposal.parlamentar.id}",  # TODO: ALTERAR A LÓGICA
             descricao_politicas_publicas="verificar",
-            proposal=emenda
+            proposal=proposal
         )
 
-        # Salva as políticas públicas associadas ao plano de ação
+        # Salva as políticas públicas associadas ao Plano
         for politica_id in politicas:
             try:
                 politica = PoliticaPublica.objects.get(pk=politica_id)
@@ -118,7 +116,7 @@ def new(request, emenda_id, politicas):
         return detail
 
     except Exception as e:
-        print(f"Erro ao criar plano de ação: {e}")
+        print(f"Erro ao criar Plano: {e}")
         return None
 
 
@@ -127,7 +125,7 @@ def remove(request, id):
     plan = get_object_or_404(Plan, pk=id)
     plan.removido_em = datetime.now()
     plan.save()
-    messages.success(request, "Plano de ação removido com sucesso!")
+    messages.success(request, "Plano removido com sucesso!")
     return redirect("plans:list")
 
 
@@ -136,7 +134,7 @@ def registrar_accountability(request, id):
     plano_acao = get_object_or_404(Plan, pk=id)
 
     if request.method == "POST":
-        new(request, id)
+        new_accountability(request, id)
     else:  # TODO: verificar abaixo
         messages.error(request, "Erro ao criar relatório de gestão. Verifique os campos.")
 
@@ -165,7 +163,7 @@ def load_datas(request):
                         except Plan.DoesNotExist:
                             messages.error(request, f'plan com ID {plano_id} não encontrada.')
                             # Aqui você pode escolher como lidar com o erro:
-                            # 1. Pular este Plano de Ação:
+                            # 1. Pular este Plano:
                             continue
                             # 2. Atribuir None e permitir que o banco de dados trate (se o campo for nulo):
                             # commitment_data['plan'] = None

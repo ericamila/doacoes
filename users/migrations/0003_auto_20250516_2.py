@@ -12,6 +12,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterField(
             model_name='usuario',
+            name='municipios',
+            field=models.ManyToManyField(blank=True, null=True, to='utils.municipio'),
+        ),
+        migrations.AlterField(
+            model_name='usuario',
             name='situacao',
             field=models.CharField(choices=[(0, 'Ativo'), (1, 'Inativo'), (2, 'Pendente')], default=2, max_length=10),
         ),

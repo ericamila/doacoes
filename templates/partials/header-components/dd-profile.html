@@ -26,7 +26,7 @@
     </a>
     <div class="pb-8 px-7 mt-8 d-flex align-items-center">
       {% if request.user.is_authenticated %}
-      <form class="d-flex w-100" method="POST" action="/autenticacao/sair">
+      <form class="d-flex w-100" method="POST" action="/users/sair">
         {% csrf_token %}
         <button class="btn btn-danger w-100" type="submit">Sair</button>
       </form>

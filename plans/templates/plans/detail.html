@@ -7,16 +7,16 @@
   {% include 'messages.html' %}
   <div class="card">
     <div class="card-header">
-      <h2>Plano de Ação</h2>
+      <h2>Plano</h2>
     </div>
     <!-- Resumo -->
     <div class="card-header">
       <div class="row">
         <div class="col-md-6">
-          <strong>Plano de Ação:</strong> {{ plan.codigo }}
+          <strong>Plano:</strong> {{ plan.codigo }}
         </div>
         <div class="col-md-6">
-          <strong>Project:</strong> <a class="text-primary fw-bold" href="{% url 'projects:detail' plan.proposal.id.id %}" style="cursor: pointer;">{{ plan.proposal.project }} <i class="fas fa-external-link-alt"></i></a>
+          <strong>Project:</strong> <a class="text-primary fw-bold" href="{% url 'projects:detail' plan.proposal.id %}" style="cursor: pointer;">{{ plan.proposal.project }} <i class="fas fa-external-link-alt"></i></a>
         </div>
       </div>
       <div class="row mt-1">
@@ -46,7 +46,7 @@
         <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold" id="dados-orcamentarios-tab" data-bs-toggle="pill" data-bs-target="#dados-orcamentarios" type="button" role="tab" aria-controls="dados-orcamentarios" aria-selected="false" tabindex="-1">Dados Orçamentários</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold" id="relatorio-gestao-tab" data-bs-toggle="pill" data-bs-target="#relatorio-gestao" type="button" role="tab" aria-controls="relatorio-gestao" aria-selected="false" tabindex="-1">Relatório de Gestão</button>
+        <button class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold" id="accountability-tab" data-bs-toggle="pill" data-bs-target="#accountability" type="button" role="tab" aria-controls="accountability" aria-selected="false" tabindex="-1">Prestação de Contas</button>
       </li>
     </ul>
     <div class="card-body">
@@ -86,13 +86,13 @@
         </style>
 
         <!-- DADOS BÁSICOS -->
-        {% include 'planos_de_acao/aba_dados_basicos.html' %}
+        {% include 'plans/aba_dados_basicos.html' %}
 
         <!-- DADOS ORÇAMENTÁRIOS -->
-        {% include 'planos_de_acao/aba_dados_orcamentarios.html' %}
+        {% include 'plans/aba_dados_orcamentarios.html' %}
 
         <!-- RELATÓRIO DE GESTÃO -->
-        {% include 'planos_de_acao/aba_relatorio_gestao.html' %}
+        {% include 'plans/aba_accountability.html' %}
         
       </section>
     </div>
@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // Adicionar arquivos
   document.querySelectorAll('.add-file-edit').forEach(function(addFileButton) {
     addFileButton.addEventListener('click', function() {
-      const relatorioId = this.getAttribute('data-relatorio-id');
-      const fileInput = document.getElementById('arquivos_edit' + relatorioId);
-      const fileList = document.getElementById('file-list_edit' + relatorioId);
+      const accountabilityId = this.getAttribute('data-accountability-id');
+      const fileInput = document.getElementById('arquivos_edit' + accountabilityId);
+      const fileList = document.getElementById('file-list_edit' + accountabilityId);
 
       if (fileInput.files.length > 0) {
         for (const file of fileInput.files) {
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const btn = e.target.closest('.remove-file-btn');
         const documentId = btn.getAttribute('data-document-id');
         if (confirm('Tem certeza de que deseja remover este arquivo?')) {
-          fetch(`/relatorio-gestao/remover-documento/${documentId}/`, {
+          fetch(`/accountability/remover-documento/${documentId}/`, {
             method: 'POST',
             headers: {
               'X-CSRFToken': '{{ csrf_token }}',

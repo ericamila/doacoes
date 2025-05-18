@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form class="border border-black flex flex-col gap-3 items-left justify-between p-5" method="POST" action="/autenticacao/entrar">
+<form class="border border-black flex flex-col gap-3 items-left justify-between p-5" method="POST" action="/users/entrar">
     {% csrf_token %}
     {{form}}
     {{form.errors}}

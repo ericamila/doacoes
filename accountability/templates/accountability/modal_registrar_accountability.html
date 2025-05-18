@@ -3,23 +3,23 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content p-3">
         <div class="modal-header d-flex align-items-center">
-          <h4 class="modal-title" id="novoModalLabel">Relatório de Gestão</h4>
+          <h4 class="modal-title" id="novoModalLabel">Prestação de Contas</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <section class="modal-body">
-          <form method="post" enctype="multipart/form-data" action="{% url 'planos_de_acao:registrar_relatorio_gestao' plano_de_acao.id %}">
+          <form method="post" enctype="multipart/form-data" action="{% url 'plans:registrar_accountability' plan.id %}">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-3">
                 <div class="mb-3">
-                  <label class="form-label" for="valor_executado">{{ relatorio_gestao_form.valor_executado.label }}</label>
-                  {{ relatorio_gestao_form.valor_executado|remove_cursor_not_allowed }}
+                  <label class="form-label" for="valor_executado">{{ accountability_form.valor_executado.label }}</label>
+                  {{ accountability_form.valor_executado|remove_cursor_not_allowed }}
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="mb-3">
-                  <label class="form-label" for="natureza_despesa">{{ relatorio_gestao_form.natureza_despesa.label }}</label>
-                  {{ relatorio_gestao_form.natureza_despesa }}
+                  <label class="form-label" for="natureza_despesa">{{ accountability_form.natureza_despesa.label }}</label>
+                  {{ accountability_form.natureza_despesa }}
                 </div>
               </div>
               <div class="col-md-6">
@@ -42,8 +42,8 @@
               </div>
               <div>
                 <div class="mb-3">
-                  <label class="form-label" for="descricao">{{ relatorio_gestao_form.descricao.label }}</label>
-                  {{ relatorio_gestao_form.descricao|remove_cursor_not_allowed }}
+                  <label class="form-label" for="descricao">{{ accountability_form.descricao.label }}</label>
+                  {{ accountability_form.descricao|remove_cursor_not_allowed }}
                 </div>
               </div>
             </div>

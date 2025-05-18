@@ -42,7 +42,7 @@ class UsuarioForm(UserCreationForm):
     )
 
     codigo_sei = forms.CharField(
-        label="Código SEI do Pedido",
+        label="Código do Pedido",
         widget=forms.TextInput(
             attrs={"class": "form-control"},
         ),

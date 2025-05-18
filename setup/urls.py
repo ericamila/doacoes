@@ -26,7 +26,7 @@ handler404 = "utils.views.view_404"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
-    path("projects/", include("projects.urls")),
+    path("", include("projects.urls")),
     path("proposals/", include("proposals.urls")),
     path("plans/", include("plans.urls")),
     path("accountability/", include("accountability.urls")),

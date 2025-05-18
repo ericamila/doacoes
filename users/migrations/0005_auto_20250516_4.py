@@ -11,27 +11,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='usuario',
-            name='codigo_sei',
-            field=models.CharField(default=123, max_length=50),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='usuario',
-            name='cpf',
-            field=models.CharField(default='123', max_length=11, unique=True),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
+        migrations.RemoveField(
             model_name='usuario',
             name='municipios',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='utils.municipio'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='usuario',
-            name='telefone',
-            field=models.CharField(default='123', max_length=15),
-            preserve_default=False,
+            name='municipios',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='utils.municipio'),
         ),
     ]

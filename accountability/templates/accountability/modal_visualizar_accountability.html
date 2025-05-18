@@ -1,9 +1,9 @@
 {% load custom_filters %}
-  <div class="modal fade" id="visualizarRelatorio{{ relatorio.id }}" tabindex="-1" aria-labelledby="visualizarRelatorioModalLabel{{ relatorio.id }}" aria-hidden="true">
+  <div class="modal fade" id="visualizaraccountability{{ accountability.id }}" tabindex="-1" aria-labelledby="visualizaraccountabilityModalLabel{{ accountability.id }}" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content p-3">
         <div class="modal-header d-flex align-items-center">
-          <h4 class="modal-title" id="visualizarRelatorioModalLabel{{ relatorio.id }}">Relatório de Gestão - Visualizar</h4>
+          <h4 class="modal-title" id="visualizaraccountabilityModalLabel{{ accountability.id }}">Prestação de Contas - Visualizar</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <section class="modal-body">
@@ -11,33 +11,33 @@
             <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label" for="valor_executado">Valor Executado</label>
-                <p class="form-control">{{ relatorio.valor_executado|currency }}</p>
+                <p class="form-control">{{ accountability.valor_executado|currency }}</p>
               </div>
             </div>
             <div class="col-md-3">
               <div class="mb-3">
                 <label class="form-label" for="natureza_despesa">Natureza da Despesa</label>
-                <p class="form-control">{{ relatorio.get_natureza_despesa_display }}</p>
+                <p class="form-control">{{ accountability.get_natureza_despesa_display }}</p>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label class="form-label" for="executor">Executor</label>
-                <input type="text" class="form-control" id="executor-ver{{ relatorio.id }}" name="executor" value="Executor(provisório)" />
+                <input type="text" class="form-control" id="executor-ver{{ accountability.id }}" name="executor" value="Executor(provisório)" />
               </div>
             </div>
             <div class="col-md-12">
               <div class="mb-3">
                 <label class="form-label" for="descricao">Descrição</label>
-                <textarea class="form-control" id="descricao-ver{{ relatorio.id }}" name="descricao" rows="3">{{ relatorio.descricao }}</textarea>
+                <textarea class="form-control" id="descricao-ver{{ accountability.id }}" name="descricao" rows="3">{{ accountability.descricao }}</textarea>
               </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
                   <label for="arquivos" class="form-label">Arquivos*</label>
                 </div>
-                <ul id="file-list-ver{{ relatorio.id }}" class="list-group mb-3">
-                  {% for documento in relatorio.documentos %}
+                <ul id="file-list-ver{{ accountability.id }}" class="list-group mb-3">
+                  {% for documento in accountability.documentos %}
                     <li class="list-group-item">
                       <a href="{{ documento.caminho.url }}" target="_blank">{{ documento.nome }}</a>
                     </li>

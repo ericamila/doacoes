@@ -1,10 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block content %}
+{% include 'messages.html' %}
 
-</body>
-</html>
+<div class="card">
+  <div class="card-body">
+    <section class="tab-content" id="pills-tabContent">
+      <article class="tab-pane fade show active" id="dados-do-proposal" role="tabpanel"
+        aria-labelledby="dados-do-proposal-tab" tabindex="0">
+        <h4 class="card-title mb-3">Adicionar Proposta</h4>
+        <form method="post" action="{% url 'proposals:new' %}">
+          {% csrf_token %}
+          <div class="row">
+
+            {% for field in proposal_form %}            
+              <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                </div>
+              </div>       
+            {% endfor %}
+
+            <div style="text-align: right; margin-bottom: 10px">
+              <button type="submit" class="btn btn-primary gap-6"><i class="ti ti-send fs-4 me-2"></i>Salvar
+                Proposta</button>
+            </div>
+          </div>
+        </form>
+      </article>
+    
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,10 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load custom_filters %} <!-- Carrega os filtro customizado para valor monetário -->
+{% block content %}
+  {% include 'messages.html' %}
 
-</body>
-</html>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Proposta</h4>
+      <section class="tab-content" id="pills-tabContent">
+        <article class="tab-pane fade show active" id="dados-da-proposal" role="tabpanel" aria-labelledby="dados-do-proposal-tab" tabindex="0">
+          <div id="campos" class="row">
+            <style>
+              section.tab-content #campos input,
+              section.tab-content #campos select,
+              textarea {
+                cursor: not-allowed;
+              }
+              
+              section.tab-content campos input:focus {
+                caret-color: transparent;
+              }
+              
+              section.tab-content campos select:focus {
+                caret-color: transparent;
+              }
+              
+              section.tab-content campos textarea:focus {
+                caret-color: transparent;
+              }
+              
+              section.tab-content *:disabled {
+                background-color: inherit;
+              }
+            </style>
+            {% for field in proposal_form %}
+              <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
+                <div class="mb-3">
+                  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {% if field.name == 'programa' %}
+                    <a class="form-control text-primary fw-bold" href="{% url 'projects:detail' proposal.project.id %}" style="cursor: pointer;">{{ proposal.programa.codigo }} <i class="fas fa-external-link-alt"></i></a>
+                  {% elif field.name == 'valor_custeio' or field.name == 'valor_investimento' %}
+                    <span class="form-control">{{ field.value|currency }}</span>
+                  {% else %}
+                    {{ field }}
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+            <!-- Início da Ciência -->
+            <div>
+              <div class="mb-3">
+                <label class="form-label" for="ciente">Situação:</label>
+                {% if proposal.ciente == True %}
+                  <span>Ciente em {{ proposal.data_ciencia }}</span>
+                  <div class="row">
+                    <label class="form-label" for="ciente">Dados Bancários:</label>
+                    <div class="col-md-6">
+                      <span class="form-control">{{ proposal.conta_bancaria }}</span>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-end">
+                      <button type="button" class="btn btn-primary col-md-4" data-bs-toggle="modal" data-bs-target="#removerCiencia">Remover ciência</button>
+                    </div>
+                  </div>
+                {% else %}
+                  <span>Não Ciente</span>
+                  <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary col-md-2" data-bs-toggle="modal" data-bs-target="#registrarCiencia">Registar ciência</button>
+                  </div>
+                  {% if proposal.sei_remocao_ciente %}
+                    <p>Ciente removido conforme processo: {{ proposal.processo_remocao_ciente }} em {{ proposal.data_remocao_ciente }}</p>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </div>
+            <!-- Fim da Ciência -->
+          </div>
+          <!-- Modal Registar Ciência -->
+          <div class="modal fade" id="registrarCiencia" tabindex="-1" aria-labelledby="cienciaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header d-flex align-items-center">
+                  <h4 class="modal-title" id="cienciaModalLabel">Registrar Ciência</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <section class="modal-body">
+                  <p>Informar dados bancários a serem vinculados aos planos de ação da proposta.</p>
+                  <form method="post" action="{% url 'proposals:registrar_ciencia' proposal.id %}">
+                    {% csrf_token %}
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="mb-3">
+                          <label class="form-label" for="banco">{{ conta_form.banco.label }}</label>
+                          {{ conta_form.banco }}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-3">
+                          <label class="form-label" for="agencia">{{ conta_form.agencia.label }}</label>
+                          {{ conta_form.agencia }}
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="mb-3">
+                          <label class="form-label" for="conta">{{ conta_form.conta.label }}</label>
+                          {{ conta_form.conta }}
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label" for="politicaPublica">Políticas Públicas:</label>
+                          {{ plano_acao_form.politicas }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                      <button type="submit" class="btn btn-primary">Ciente</button>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+          </div>
+          <!-- Fim Modal -->
+          <!-- Modal Remover Ciência -->
+          <div class="modal fade" id="removerCiencia" tabindex="-1" aria-labelledby="cienciaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header d-flex align-items-center">
+                  <h4 class="modal-title" id="cienciaModalLabel">Remover Ciência</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <section class="modal-body">
+                  <p>Informar o código do processo da solicitação.</p>
+                  <form method="post" action="{% url 'proposals:remover_ciencia' proposal.id %}">
+                    {% csrf_token %}
+                    <span class="form-label">Código do Processo:</span>
+                    <input type="text" name="sei_remocao_ciente" class="form-control" required />
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                      <button type="submit" class="btn btn-primary">Remover Ciência</button>
+                    </div>
+                  </form>
+                </section>
+              </div>
+            </div>
+          </div>
+          <!-- Fim Modal -->
+        </article>
+      </section>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const campos = document.getElementById('campos')
+      if (campos) {
+        const inputs = campos.querySelectorAll('input')
+        const selects = campos.querySelectorAll('select')
+        const textareas = campos.querySelectorAll('textarea')
+    
+        // Torna todos os inputs, selects e textareas dentro da div #campos não editáveis
+        inputs.forEach((input) => {
+          input.readOnly = true // Torna o campo somente leitura
+          input.disabled = true // Desabilita o campo
+        })
+    
+        selects.forEach((select) => {
+          select.disabled = true // Desabilita o campo select
+        })
+    
+        textareas.forEach((textarea) => {
+          textarea.readOnly = true // Torna o campo somente leitura
+          textarea.disabled = true // Desabilita o campo
+        })
+      }
+    })
+  </script>
+{% endblock %}

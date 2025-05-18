@@ -26,12 +26,12 @@
             <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
               <div class="mb-3">
                 <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% if field.name == 'plano_de_acao' %}
-                  <a class="form-control text-primary fw-bold" href="{% url 'planos_de_acao:ler_plano_de_acao' empenho.plano_de_acao.id %}" style="cursor: pointer;">{{ empenho.plano_de_acao.codigo }} <i class="fas fa-external-link-alt"></i></a>
+                {% if field.name == 'plan' %}
+                  <a class="form-control text-primary fw-bold" href="{% url 'plans:detail' commitment.plan.id %}" style="cursor: pointer;">{{ commitment.plan.codigo }} <i class="fas fa-external-link-alt"></i></a>
                 {% elif field.name == 'valor' or field.name == 'valor_estornado' %}
                   <span class="form-control">{{ field.value|currency }}</span>
                 {% elif field.name == 'situacao' %}
-                  <span class="form-control">{{ empenho.get_situacao_display }}</span>
+                  <span class="form-control">{{ commitment.get_situacao_display }}</span>
                 {% else %}
                   {{ field }}
                 {% endif %}

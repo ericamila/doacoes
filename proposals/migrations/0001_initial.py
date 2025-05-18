@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('conta_bancaria', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='utils.contabancaria')),
                 ('municipio', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='utils.municipio')),
                 ('parlamentar', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='utils.parlamentar')),
-                ('programa', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.project')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.project')),
             ],
             options={
                 'verbose_name': 'Proposta',

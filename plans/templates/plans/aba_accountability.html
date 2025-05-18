@@ -1,9 +1,9 @@
 {% load custom_filters %}
 {% load auth %}
-<article class="tab-pane fade" id="relatorio-gestao" role="tabpanel" aria-labelledby="relatorio-gestao-tab" tabindex="2">
+<article class="tab-pane fade" id="accountability" role="tabpanel" aria-labelledby="accountability-tab" tabindex="2">
           <div class="accordion-body table-responsive p-0">
             <!-- considera-se total executado o somatório dos documentos de liquidacao -->
-            {% include 'planos_de_acao/grafico.html' %}
+            {% include 'plans/grafico.html' %}
 
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="section-title">Lista de Relatórios de Gestão</h5>
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Modal -->
-            {% include 'relatorio_gestao/modal_registrar_relatorio.html' %}
+            {% include 'accountability/modal_registrar_accountability.html' %}
             <!-- Fim Modal -->
 
             <table class="table text-nowrap mb-0 align-middle">
@@ -46,10 +46,10 @@
                 </tr>
               </thead>
               <tbody>
-                {% for relatorio in relatorios_gestao %}
+                {% for accountability in accountabilities %}
                   <tr>
                     <td>
-                      <p class="mb-0 fw-normal fs-4">{{ relatorio.data_criacao|date:'d/m/Y' }}</p>
+                      <p class="mb-0 fw-normal fs-4">{{ accountability.data_criacao|date:'d/m/Y' }}</p>
                     </td>
                     <td>
                       <p class="mb-0 fw-normal fs-4">Tipo</p>
@@ -58,56 +58,56 @@
                       <p class="mb-0 fw-normal fs-4">Executor</p>
                     </td>
                     <td>
-                      <p class="mb-0 fw-normal fs-4">{{ relatorio.get_natureza_despesa_display }}</p>
+                      <p class="mb-0 fw-normal fs-4">{{ accountability.get_natureza_despesa_display }}</p>
                     </td>
                     <td>
-                      <p class="mb-0 fw-normal fs-4">{{ relatorio.valor_executado|currency }}</p>
+                      <p class="mb-0 fw-normal fs-4">{{ accountability.valor_executado|currency }}</p>
                     </td>
                     <td>
                       <p class="mb-0 fw-normal fs-4">R$ 0,00</p>
                     </td>
                     <td>
                       <div class="d-flex gap-2 align-items-center justify-content-center">
-                        <button type="button" class="btn btn-sm m-0 p-0" data-bs-toggle="modal" data-bs-target="#visualizarRelatorio{{ relatorio.id }}">{% include 'partials/icons/detalhar.html' %}</button>
+                        <button type="button" class="btn btn-sm m-0 p-0" data-bs-toggle="modal" data-bs-target="#visualizaraccountability{{ accountability.id }}">{% include 'partials/icons/detalhar.html' %}</button>
                         {% if user|admin %}
-                        <button type="button" class="btn btn-sm m-0 p-0" data-bs-toggle="modal" data-bs-target="#editarRelatorio{{ relatorio.id }}">{% include 'partials/icons/edit.html' %}</button>
-                        <button class="btn p-0 text-danger" title="Excluir" onclick="document.getElementById('confirmDeleteRelatorio{{ relatorio.id }}').classList.remove('d-none')">{% include 'partials/icons/lixeira.html' %}</button>
+                        <button type="button" class="btn btn-sm m-0 p-0" data-bs-toggle="modal" data-bs-target="#editaraccountability{{ accountability.id }}">{% include 'partials/icons/edit.html' %}</button>
+                        <button class="btn p-0 text-danger" title="Excluir" onclick="document.getElementById('confirmDeleteaccountability{{ accountability.id }}').classList.remove('d-none')">{% include 'partials/icons/lixeira.html' %}</button>
 
                         <!-- Modal de confirmação -->
-                        <div id="confirmDeleteRelatorio{{ relatorio.id }}" class="d-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+                        <div id="confirmDeleteaccountability{{ accountability.id }}" class="d-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
                             <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
                                 <p>Tem certeza que deseja remover este relatório?</p>
                                 <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
-                                <form method="POST" action="{% url 'relatorio_gestao:remover_relatorio_gestao' relatorio.id %}" style="display: inline;">
+                                <form method="POST" action="{% url 'accountability:remove' accountability.id %}" style="display: inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-sm btn-danger">Confirmar</button>
                                 </form>
-                                <button onclick="document.getElementById('confirmDeleteRelatorio{{ relatorio.id }}').classList.add('d-none')" class="btn btn-sm btn-secondary">Cancelar</button>
+                                <button onclick="document.getElementById('confirmDeleteaccountability{{ accountability.id }}').classList.add('d-none')" class="btn btn-sm btn-secondary">Cancelar</button>
                                 </div>
                             </div>
                         </div>
-                        <!-- <a class="text-info" href="{% url 'relatorio_gestao:editar_relatorio_gestao' relatorio.id %}" title="Editar">{% include 'partials/icons/edit.html' %}</a> -->
+                        <!-- <a class="text-info" href="{% url 'accountability:edit' accountability.id %}" title="Editar">{% include 'partials/icons/edit.html' %}</a> -->
                         {% endif %}                        
                       </div>
                     </td>
                   </tr>
                 {% empty %}
                   <tr>
-                    <td colspan="5" class="text-center">Nenhum relatório de gestão encontrado</td>
+                    <td colspan="5" class="text-center">Nenhuma prestação de contas encontrada</td>
                   </tr>
                 {% endfor %}
               </tbody>
             </table>
 
             <!-- Modal de Visualização -->
-            {% for relatorio in relatorios_gestao %}
-              {% include 'relatorio_gestao/modal_visualizar_relatorio.html' with relatorio=relatorio %}
+            {% for accountability in accountabilities %}
+              {% include 'accountability/modal_visualizar_accountability.html' with accountability=accountability %}
             {% endfor %}
             <!-- Fim Modal de Visualização -->
             
             <!-- Modal de Edição -->
-            {% for relatorio in relatorios_gestao %}
-              {% include 'relatorio_gestao/modal_editar_relatorio.html' with relatorio=relatorio %}
+            {% for accountability in accountabilities %}
+              {% include 'accountability/modal_editar_accountability.html' with accountability=accountability %}
             {% endfor %}
             <!-- Fim Modal de Edição -->
 

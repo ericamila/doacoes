@@ -11,13 +11,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
+        migrations.AlterField(
             model_name='usuario',
             name='municipios',
-        ),
-        migrations.AddField(
-            model_name='usuario',
-            name='municipios',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='utils.municipio'),
+            field=models.ManyToManyField(blank=True, to='utils.municipio'),
         ),
     ]

@@ -26,15 +26,15 @@
             <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
               <div class="mb-3">
                 <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {% if field.name == 'liquidacao' %}
-                  <a class="form-control text-primary fw-bold" href="{% url 'liquidacoes:ler_liquidacao' pagamento.liquidacao.id %}" style="cursor: pointer;">
-                    {{ pagamento.liquidacao.codigo }}
+                {% if field.name == 'settlement' %}
+                  <a class="form-control text-primary fw-bold" href="{% url 'settlement:detail' payment.settlement.id %}" style="cursor: pointer;">
+                    {{ payment.settlement.codigo }}
                     <i class="fas fa-external-link-alt"></i>
                   </a>
                 {% elif field.name == 'valor' or field.name == 'valor_estornado' %}
                   <span class="form-control">{{ field.value|currency }}</span>
                 {% elif field.name == 'situacao' %}
-                  <span class="form-control">{{ pagamento.get_situacao_display }}</span>
+                  <span class="form-control">{{ payment.get_situacao_display }}</span>
                 {% else %}
                   {{ field }}
                 {% endif %}

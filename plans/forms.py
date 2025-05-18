@@ -13,5 +13,5 @@ class PlanForm(forms.ModelForm):
     )
     class Meta:
         model = Plan
-        exclude = ["removido_em", "descricao_politicas_publicas", "codigo", "porposal, politicas_publicas_planos_de_acao"]  # Exclui os campos do formulário
+        exclude = ["removido_em", "descricao_politicas_publicas", "codigo", "porposal, politicas_publicas_plans"]  # Exclui os campos do formulário
         fields = ["politicas"]

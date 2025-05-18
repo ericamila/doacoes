@@ -10,7 +10,7 @@ class CommitmentForm(forms.ModelForm):
         labels = {
             "codigo": "Código",
             "processo": "Processo",
-            "plan": "Plano de Ação",
+            "plan": "Plano",
             "valor": "Valor",
             "valor_estornado": "Valor Estornado",
             "situacao": "Situação",

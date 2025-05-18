@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser
 from utils.models import Municipio
 
 
@@ -24,18 +24,6 @@ class Usuario(AbstractUser, models.Model):
     )
     municipios = models.ForeignKey(Municipio, null=True, on_delete=models.SET_NULL)
     removido_em = models.DateTimeField(null=True, blank=True)
-
-    # Adicione os related_names para evitar conflitos
-    groups = models.ManyToManyField(
-        Group,
-        related_name="custom_user_set",  # Nome único para evitar conflito
-        blank=True
-    )
-    user_permissions = models.ManyToManyField(
-        Permission,
-        related_name="custom_user_permissions_set",  # Nome único para evitar conflito
-        blank=True
-    )
 
     class Meta:
         db_table = "usuarios"

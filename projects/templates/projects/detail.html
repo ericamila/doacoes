@@ -153,7 +153,7 @@
             <thead class="text-dark fs-4">
               <tr>
                 <th>
-                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                  <h6 class="fs-4 fw-semibold mb-0">Proposta</h6>
                 </th>
                 <th>
                   <h6 class="fs-4 fw-semibold mb-0">Município</h6>
@@ -198,7 +198,7 @@
                 </td>
                 <td>
                   <div class="d-flex gap-2 align-items-end justify-content-center">
-                    <a class="search" href="{% url 'proposals_parlamentares:ler_proposal' proposal.id %}">{% include 'partials/icons/detalhar.html' %}</a>
+                    <a class="search" href="{% url 'proposals:detail' proposal.id %}">{% include 'partials/icons/detalhar.html' %}</a>
                   </div>
                 </td>
               </tr>
@@ -226,7 +226,7 @@
                   <h6 class="fs-4 fw-semibold mb-0">UF</h6>
                 </th>
                 <th>
-                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                  <h6 class="fs-4 fw-semibold mb-0">Proposta</h6>
                 </th>
                 <th>
                   <h6 class="fs-4 fw-semibold mb-0">Custeio</h6>
@@ -235,7 +235,7 @@
                   <h6 class="fs-4 fw-semibold mb-0">Investimento</h6>
                 </th>
                 <th>
-                  <h6 class="fs-4 fw-semibold mb-0">Plano de Ação</h6>
+                  <h6 class="fs-4 fw-semibold mb-0">Plano</h6>
                 </th>
                 <th>
                   <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
@@ -251,7 +251,7 @@
                   <p class="mb-0 fw-normal fs-4">UF</p>
                 </td>
                 <td>
-                  <p class="mb-0 fw-normal fs-4">Emenda Parlamentar</p>
+                  <p class="mb-0 fw-normal fs-4">Proposta</p>
                 </td>
                 <td>
                   <p class="mb-0 fw-normal fs-4">Custeio</p>
@@ -260,7 +260,7 @@
                   <p class="mb-0 fw-normal fs-4">Investimento</p>
                 </td>
                 <td>
-                  <p class="mb-0 fw-normal fs-4">Plano de Ação</p>
+                  <p class="mb-0 fw-normal fs-4">Plano</p>
                 </td>
                 <td>
                   <p class="mb-0 fw-normal fs-4">Situação</p>

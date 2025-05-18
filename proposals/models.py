@@ -18,7 +18,7 @@ class Proposal(models.Model):
     descricao = models.TextField()
     ciente = models.BooleanField(default=False)
     data_ciencia = models.DateTimeField(null=True, blank=True)
-    sei_remocao_ciente = models.CharField(max_length=100, null=True, blank=True)
+    processo_remocao_ciente = models.CharField(max_length=100, null=True, blank=True)
     data_remocao_ciente = models.DateTimeField(null=True, blank=True)
     removido_em = models.DateTimeField(null=True, blank=True)
 

@@ -10,29 +10,29 @@ from accountability.models import Document, Accountability
 
 # Create your views here.
 def lists(request):
-    relatorios = Accountability.objects.filter(removido_em=None)
-    for relatorio in relatorios:
-        relatorio.documentos = Document.objects.filter(removido_em=None, accountability=relatorio)
-    return render(request, 'accountability/list.html', {'relatorios': relatorios})
+    accountabilities = Accountability.objects.filter(removido_em=None)
+    for accountability in accountabilities:
+        accountability.documentos = Document.objects.filter(removido_em=None, accountability=accountability)
+    return render(request, 'accountability/list.html', {'accountabilities': accountabilities})
 
 
 @login_required
 def new(request, id):
     try:
-        plano_de_acao = get_object_or_404(Plan, pk=id)
+        plan = get_object_or_404(Plan, pk=id)
 
         accountability = Accountability.objects.create(
             valor_executado=request.POST.get('valor_executado'),
             natureza_despesa=request.POST.get('natureza_despesa'),
             descricao=request.POST.get('descricao'),
-            plano_de_acao=plano_de_acao,
+            plan=plan,
             data_criacao=datetime.now(),
         )
 
         register_document(request, accountability.id)
         accountability.save()
 
-        messages.success(request, "Relatório de Gestão criado com sucesso.")
+        messages.success(request, "Prestação de Contas criado com sucesso.")
         return accountability
 
     except Exception as e:
@@ -43,10 +43,10 @@ def new(request, id):
 
 @login_required
 def edit(request, id):
-    relatorio = get_object_or_404(Accountability, pk=id)
+    accountability = get_object_or_404(Accountability, pk=id)
 
     if request.method == "POST":
-        form = AccountabilityForm(request.POST, request.FILES, instance=relatorio)
+        form = AccountabilityForm(request.POST, request.FILES, instance=accountability)
 
         if form.is_valid():
             form.save()
@@ -55,36 +55,36 @@ def edit(request, id):
             arquivos = request.FILES.getlist('arquivos')
             for arquivo in arquivos:
                 Document.objects.create(
-                    accountability=relatorio,
+                    accountability=accountability,
                     caminho=arquivo,
                     nome=arquivo.name,
                     tamanho=arquivo.size,
                 )
 
-            messages.success(request, "Relatório de Gestão atualizado com sucesso.")
+            messages.success(request, "Prestação de Contas atualizada com sucesso.")
         else:
             messages.error(request, "Erro ao atualizar o relatório de gestão. Verifique os campos.")
 
     else:
-        form = AccountabilityForm(instance=relatorio)
+        form = AccountabilityForm(instance=accountability)
 
-    return render(request, 'accountability/edit.html', {'form': form, 'relatorio': relatorio})
+    return render(request, 'accountability/edit.html', {'form': form, 'accountability': accountability})
 
 
 @login_required
 def remover_accountability(request, id):
-    relatorio = get_object_or_404(Accountability, pk=id)
+    accountability = get_object_or_404(Accountability, pk=id)
 
     if request.method == "POST":
-        relatorio.removido_em = datetime.now()
-        relatorio.save()
+        accountability.removido_em = datetime.now()
+        accountability.save()
 
-    return relatorio
+    return accountability
 
 
 @login_required
-def register_document(request, relatorio_id):
-    relatorio = get_object_or_404(Accountability, pk=relatorio_id)
+def register_document(request, accountability_id):
+    accountability = get_object_or_404(Accountability, pk=accountability_id)
 
     if request.method == "POST":
         form = DocumentForm(request.POST, request.FILES)
@@ -93,7 +93,7 @@ def register_document(request, relatorio_id):
             for arquivo in arquivos:
                 try:
                     documento = Document(
-                        accountability=relatorio,
+                        accountability=accountability,
                         caminho=arquivo,
                         nome=arquivo.name,
                         tamanho=arquivo.size,
@@ -102,13 +102,13 @@ def register_document(request, relatorio_id):
                 except Exception as e:
                     messages.error(request, f"Erro ao salvar o arquivo {arquivo.name}.")
             # TODO: verificar retornos e redirecionamentos
-            return redirect("/planos-de-acao/plano-de-acao.html#relatorio-gestao")
+            return redirect("/planos-de-acao/plano-de-acao.html#accountability")
         else:
             messages.error(request, form.errors)
     else:
         form = DocumentForm()
     # return form
-    return render(request, "accountability/modal_registrar_relatorio.html", {"form": form, "relatorio": relatorio})
+    return render(request, "accountability/modal_registrar_accountability.html", {"form": form, "accountability": accountability})
 
 
 @login_required

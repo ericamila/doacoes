@@ -6,13 +6,13 @@
 <div class="card">
   <div class="card-body">
     <section class="tab-content" id="pills-tabContent">
-      <article class="tab-pane fade show active" id="dados-do-programa" role="tabpanel"
-        aria-labelledby="dados-do-programa-tab" tabindex="0">
-        <h4 class="card-title mb-3">Adicionar Programa</h4>
-        <form method="post" action="{% url 'programas:criar_programa' %}">
+      <article class="tab-pane fade show active" id="dados-do-project" role="tabpanel"
+        aria-labelledby="dados-do-project-tab" tabindex="0">
+        <h4 class="card-title mb-3">Adicionar Projeto</h4>
+        <form method="post" action="{% url 'projects:new' %}">
           {% csrf_token %}
           <div class="row">
-            {% for field in programa_form %}
+            {% for field in project_form %}
             <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
               <div class="mb-3">
                 <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -22,7 +22,7 @@
             {% endfor %}
             <div style="text-align: right; margin-bottom: 10px">
               <button type="submit" class="btn btn-primary gap-6"><i class="ti ti-send fs-4 me-2"></i>Salvar
-                Programa</button>
+                Projeto</button>
             </div>
           </div>
         </form>
@@ -41,7 +41,7 @@
                   <h6 class="fs-4 fw-semibold mb-0">UF</h6>
                 </th>
                 <th>
-                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                  <h6 class="fs-4 fw-semibold mb-0">Proposta</h6>
                 </th>
                 <th>
                   <h6 class="fs-4 fw-semibold mb-0">Custeio</h6>
@@ -50,7 +50,7 @@
                   <h6 class="fs-4 fw-semibold mb-0">Investimento</h6>
                 </th>
                 <th>
-                  <h6 class="fs-4 fw-semibold mb-0">Plano de Ação</h6>
+                  <h6 class="fs-4 fw-semibold mb-0">Plano</h6>
                 </th>
                 <th>
                   <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
@@ -66,7 +66,7 @@
                   <p class="mb-0 fw-normal fs-4">UF</p>
                 </td>
                 <td>
-                  <p class="mb-0 fw-normal fs-4">Emenda Parlamentar</p>
+                  <p class="mb-0 fw-normal fs-4">Proposta</p>
                 </td>
                 <td>
                   <p class="mb-0 fw-normal fs-4">Custeio</p>
@@ -75,7 +75,7 @@
                   <p class="mb-0 fw-normal fs-4">Investimento</p>
                 </td>
                 <td>
-                  <p class="mb-0 fw-normal fs-4">Plano de Ação</p>
+                  <p class="mb-0 fw-normal fs-4">Plano</p>
                 </td>
                 <td>
                   <p class="mb-0 fw-normal fs-4">Situação</p>

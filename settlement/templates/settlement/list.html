@@ -16,7 +16,7 @@
         </div>
 
         {% if request.GET.obj %}
-          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'liquidacoes:ler_liquidacoes' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
+          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'settlement:lists' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
         {% endif %}
 
         <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center p-2" style="width: 40px; height: 40px;"><i class="ti ti-filter fs-7"></i></button>
@@ -36,14 +36,14 @@
             </tr>
           </thead>
           <tbody>
-            {% for liquidacao in liquidacoes %}
+            {% for settlement in settlements %}
               <tr>
-                <td>{{ liquidacao.codigo }}</td>
-                <td>{{ liquidacao.empenho.codigo }}</td>
-                <td>{{ liquidacao.valor|currency }}</td>
-                <td>{{ liquidacao.valor_estornado|currency }}</td>
-                <td>{{ liquidacao.get_situacao_display }}</td>
-                <td>{{ liquidacao.data|date:"d/m/Y" }}</td>  
+                <td>{{ settlement.codigo }}</td>
+                <td>{{ settlement.commitment.codigo }}</td>
+                <td>{{ settlement.valor|currency }}</td>
+                <td>{{ settlement.valor_estornado|currency }}</td>
+                <td>{{ settlement.get_situacao_display }}</td>
+                <td>{{ settlement.data|date:"d/m/Y" }}</td>  
                 <td>
                   <div class="d-flex gap-2 align-items-center justify-content-center">
                     <a href="{% url 'settlement:detail' settlement.id %}" title="Detalhar">{% include 'partials/icons/detalhar.html' %}</a>

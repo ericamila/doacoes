@@ -18,7 +18,7 @@ def lists(request):
     obj = request.GET.get("obj")  # Implementa o mecanismo de busca
 
     if obj:
-        proposals_list = proposals_list.filter(programa__codigo__icontains=obj) | proposals_list.filter(
+        proposals_list = proposals_list.filter(project__codigo__icontains=obj) | proposals_list.filter(
             parlamentar__nome__icontains=obj)
     else:
         proposals_list = proposals_list.order_by("codigo")
@@ -60,7 +60,7 @@ def detail(request, id):
     )
 
 
-# Criação de Emenda Parlamentar
+# Criação de Proposta
 @login_required
 def new(request):
     if request.method == "POST":
@@ -68,7 +68,7 @@ def new(request):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Emenda enviada com sucesso!")
+            messages.success(request, "Proposta enviada com sucesso!")
             return redirect("proposals:new")
         else:
             messages.error(request, "Erro ao salvar o proposal. Verifique os campos.")
@@ -78,7 +78,7 @@ def new(request):
     return render(request, "proposals/new.html", {"proposal_form": form})
 
 
-# Atualização de Emenda Parlamentar
+# Atualização de Proposta
 @login_required
 def edit(request, id):
     proposal = get_object_or_404(Proposal, pk=id)
@@ -88,7 +88,7 @@ def edit(request, id):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Emenda atualizada com sucesso!")
+            messages.success(request, "Proposta atualizada com sucesso!")
         else:
             messages.error(request, "Erro ao salvar a proposal. Verifique os campos.")
 
@@ -98,7 +98,7 @@ def edit(request, id):
     return render(request, "proposals/edit.html", {"proposal_form": form, "proposal": proposal})
 
 
-# Remoção de Emenda Parlamentar
+# Remoção de Proposta
 @login_required
 def remove(request, id):
     proposal = get_object_or_404(Proposal, pk=id)

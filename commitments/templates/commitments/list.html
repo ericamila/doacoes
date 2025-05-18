@@ -27,8 +27,8 @@
           <thead class="table-light bg-light text-dark fw-bold fs-4">
             <tr>
               <th>Código</th>
-              <th>Processo SEI</th>
-              <th>Plano de Ação</th>
+              <th>Processo</th>
+              <th>Plano</th>
               <th>Valor</th>
               <th>Situação</th>
               <th>Data</th>
@@ -39,8 +39,8 @@
             {% for commitment in commitments %}
               <tr>
                 <td>{{ commitment.codigo }}</td>
-                <td>{{ commitment.processo_sei }}</td>
-                <td>{{ commitment.plano_de_acao.codigo }}</td>
+                <td>{{ commitment.processo }}</td>
+                <td>{{ commitment.plan.codigo }}</td>
                 <td>{{ commitment.valor|currency }}</td>
                 <td>{{ commitment.get_situacao_display }}</td>
                 <td>{{ commitment.data|date:"d/m/Y" }}</td>  
@@ -52,7 +52,7 @@
               </tr>
             {% empty %}
               <tr>
-                <td colspan="7" class="text-center">Nenhum commitment encontrado</td>
+                <td colspan="7" class="text-center">Nenhum empenho encontrado</td>
               </tr>
             {% endfor %}
           </tbody>

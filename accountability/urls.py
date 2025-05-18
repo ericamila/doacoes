@@ -9,6 +9,6 @@ urlpatterns = [
     path("criar", views.new, name="new"),
     path("<int:id>/editar", views.edit, name="edit"),
     path("<int:id>/remover", views.remover_accountability, name="remove"),
-    path("<int:relatorio_id>/registrar-documento/", views.register_document, name="register_document"),
+    path("<int:accountability_id>/registrar-documento/", views.register_document, name="register_document"),
     path('remover-documento/<int:documento_id>/', views.remove_document, name='remove_document'),
 ]

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+  {% include 'messages.html' %}
+
+  <div class="card">
+    <div class="card-body">
+      <section class="tab-content" id="pills-tabContent">
+        <h4 class="card-title mb-3">Editar Relatório</h4>
+
+          <div class="p-3">
+            <div class="d-flex align-items-center">
+              <h4>Relatório de Gestão</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <section class="modal-body">
+              <form method="post" enctype="multipart/form-data" action="{% url 'relatorio_gestao:editar_relatorio_gestao' relatorio.id %}">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label class="form-label" for="valor_executado">{{ form.valor_executado.label }}</label>
+                      {{ form.valor_executado }}
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="mb-3">
+                      <label class="form-label" for="natureza_despesa">{{ form.natureza_despesa.label }}</label>
+                      {{ form.natureza_despesa }}
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label class="form-label" for="executor">*Executor</label>
+                      <input type="text" class="form-control" id="executor" name="executor" value="Executor(provisório)" />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="arquivos" class="form-label">Selecione os arquivos*</label>
+                      <div class="d-flex align-items-center">
+                        {{ documento.arquivos }}
+                        <button type="button" id="add-file" class="btn btn-secondary ms-2">+</button>
+                      </div>
+                    </div>
+                    <ul id="file-list" class="list-group mb-3">
+                      <!-- Lista de arquivos adicionados aqui -->
+                    </ul>
+                  </div>
+                  <div>
+                    <div class="mb-3">
+                      <label class="form-label" for="descricao">{{ form.descricao.label }}</label>
+                      {{ form.descricao }}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                  <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+              </form>
+            </section>
+          </div>
+      </section>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% load static %}
+
+<!-- ---------------------------------- -->
+<!-- Start Vertical Layout Sidebar -->
+<!-- ---------------------------------- -->
+{% include "partials/logo-sidebar.html" %}
+
+<style>
+  .simplebar-wrapper,
+  .simplebar-content {
+    height: calc(100% - 24px);
+  }
+</style>
+<nav class="sidebar-nav scroll-sidebar position-relative flex-grow-1" data-simplebar>
+  <div class="d-flex flex-column justify-content-between h-100">
+    <ul id="sidebarnav" style="margin-bottom: 0;">
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'projects:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-report-analytics"></i>
+          </span>
+          <span class="fw-bold hide-menu">Projetos</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'proposals:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-coin"></i>
+          </span>
+          <span class="fw-bold hide-menu">Propostas</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'plans:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-cash"></i>
+          </span>
+          <span class="fw-bold hide-menu">Planos</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'commitments:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-coins"></i>
+          </span>
+          <span class="fw-bold hide-menu">Empenhos</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'settlement:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-shopping-cart-dollar"></i>
+          </span>
+          <span class="fw-bold hide-menu">Liquidações</span>
+        </a>
+      </li>
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'payment:lists' %}" aria-expanded="false">
+          <span>
+            <i class="ti ti-cash-banknote-move"></i>
+          </span>
+          <span class="fw-bold hide-menu">Pagamentos</span>
+        </a>
+      </li>
+    </ul>
+    <ul class="sidebarnav mb-0">
+      {% if request.user.is_authenticated %}
+      <li class="sidebar-item">
+        <form method="POST" action="{% url 'users:logout' %}">
+          {% csrf_token %}
+          <button class="sidebar-link" style="background-color: transparent; border: none;" type="submit">
+            <span class="text-danger">
+              <i class="ti ti-door-exit"></i>
+            </span>
+            <span class="fw-bold hide-menu text-danger">Sair</span>
+          </button>
+        </form>
+      </li>
+      {% else %}
+      <li class="sidebar-item">
+        <a class="sidebar-link" href="{% url 'users:login' %}" aria-expanded="false">
+          <span class="text-primary">
+            <i class="ti ti-door-exit"></i>
+          </span>
+          <span class="fw-bold hide-menu text-primary">Entrar</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

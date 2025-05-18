@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
+  <head>
+    {% include 'partials/head.html' %}
+    <title>Transfere RR</title>
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="{% static 'js/owl.carousel/dist/assets/owl.carousel.min.css' %}" />
+  </head>
+
+  <body>
+    <!-- Preloader -->
+    <div class="preloader">
+      <img src="{% static 'images/logos/preloader.svg' %}" alt="loader" class="lds-ripple img-fluid" />
+    </div>
+    <div id="main-wrapper">
+      <!-- Sidebar Start -->
+      <aside class="left-sidebar with-vertical d-flex flex-column">
+        <div class="d-flex flex-column flex-grow-1">
+          {% include 'partials/sidebar.html' %}
+        </div>
+      </aside>
+      <!-- Sidebar End -->
+      <div class="page-wrapper">
+        <!-- Header Start -->
+        <header class="topbar">
+          <div class="with-vertical">
+            {% include 'partials/header.html' %}
+          </div>
+          <div class="app-header with-horizontal">{% include 'partials/horizontal-header.html' %}</div>
+        </header>
+        <!-- Header End -->
+
+        <aside class="left-sidebar with-horizontal">
+          {% include 'partials/horizontal-sidebar.html' %}
+        </aside>
+
+        <div class="body-wrapper">
+          <div class="container-fluid">
+            {% include 'partials/breadcrumb.html' %}
+            {% block content %}
+
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+
+      {% include 'partials/header-components/dd-searchbar.html' %}
+    </div>
+    <div class="dark-transparent sidebartoggler"></div>
+    <script src="{% static 'js/vendor.min.js' %}"></script>
+    {% include 'partials/scripts.html' %}
+    <script src="{% static 'js/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/apexcharts/dist/apexcharts.min.js' %}"></script>
+    <style>
+      .active > .page-link {
+        --bs-pagination-active-bg: #1e4db7; /* substitua pela cor desejada */
+        --bs-pagination-active-border-color: var(--bs-pagination-active-bg);
+      }
+    </style>
+  </body>
+</html>

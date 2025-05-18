@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% load custom_filters %} <!-- Carrega os filtro customizado para valor monetário --> 
+
+{% block content %}
+<div class="card">
+  <ul class="nav nav-pills user-profile-tab border-bottom" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link position-relative rounded-0 active d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold"
+        id="dados-do-project-tab" data-bs-toggle="pill" data-bs-target="#dados-do-project" type="button" role="tab"
+        aria-controls="dados-do-project" aria-selected="true">
+        Dados Básicos
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold"
+        id="proposals-tab" data-bs-toggle="pill" data-bs-target="#proposals" type="button" role="tab"
+        aria-controls="proposals" aria-selected="false" tabindex="-1">
+        Propostas
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold"
+        id="beneficiarios-tab" data-bs-toggle="pill" data-bs-target="#beneficiarios" type="button" role="tab"
+        aria-controls="beneficiarios" aria-selected="false" tabindex="-1">
+        Beneficiários
+      </button>
+    </li>
+  </ul>
+  <div class="card-body">
+    <section class="tab-content" id="pills-tabContent">
+      <style>
+        section.tab-content input {
+          cursor: not-allowed;
+        }
+
+        section.tab-content input:focus {
+          caret-color: transparent;
+        }
+
+        section.tab-content select:focus {
+          caret-color: transparent;
+        }
+
+        section.tab-content textarea:focus {
+          caret-color: transparent;
+        }
+
+        section.tab-content *:disabled {
+          background-color: inherit;
+        }
+
+        section.tab-content input[type="checkbox"] {
+          cursor: not-allowed;
+        }
+
+      </style>
+      <article class="tab-pane fade show active" id="dados-do-project" role="tabpanel"
+        aria-labelledby="dados-do-project-tab" tabindex="0">
+        <h4 class="card-title mb-3">Dados do Projeto</h4>
+        <div id="campos" class="row">
+          {% for field in project %}
+          <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
+            <div class="mb-3">
+              <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+          campos = document.getElementById("campos");
+          inputs = campos.getElementsByTagName("input");
+          selects = campos.getElementsByTagName("select");
+          textareas = campos.getElementsByTagName("textarea");
+          const checkboxes = campos.querySelectorAll("input[type='checkbox']");
+
+          for (input of inputs) {
+            input.readOnly = true;
+            input.autocomplete = "off";
+          }
+
+          for (select of selects) {
+            select.disabled = true;
+            select.autocomplete = "off";
+          }
+
+          for (textarea of textareas) {
+            textarea.readOnly = true;
+            textarea.autocomplete = "off";
+          }
+
+          for (checkbox of checkboxes) {
+            checkbox.disabled = true;
+            checkbox.readOnly = true;
+          }
+        });
+        </script>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-headingOne">
+              <button class="accordion-button collapsed pb-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                <h5 class="mb-0">Anexos</h5>
+              </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
+              data-bs-parent="#accordionFlushExample">
+              <div class="accordion-body table-responsive p-0">
+                <table class="table text-nowrap mb-0 align-middle">
+                  <thead class="text-dark fs-4">
+                    <tr>
+                      <th>
+                        <h6 class="fs-4 fw-semibold mb-0">Nome do Arquivo</h6>
+                      </th>
+                      <th>
+                        <h6 class="fs-4 fw-semibold mb-0">Descrição do Arquivo</h6>
+                      </th>
+                      <th>
+                        <h6 class="fs-4 fw-semibold mb-0 text-end">Ações</h6>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <h6 class="fs-4 fw-semibold mb-0">Nome do Arquivo</h6>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">Descrição do Arquivo</p>
+                      </td>
+                      <td>
+                        <h6 class="fs-4 fw-semibold mb-0 text-primary">
+                          <div class="d-flex align-items-center justify-content-end">
+                            {% include "partials/icons/download.html" %}
+                          </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="tab-pane fade" id="proposals" role="tabpanel" aria-labelledby="proposals-tab"
+        tabindex="0">
+        <div class="accordion-body table-responsive p-0">
+          <table class="table text-nowrap mb-0 align-middle">
+            <thead class="text-dark fs-4">
+              <tr>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Município</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Parlamentar</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Custeio</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Investimento</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Detalhar</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for proposal in proposals %}
+              <tr>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{{ proposal.codigo }}</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{{ proposal.municipio.nome }}</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{{ proposal.parlamentar.nome }}</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{{ proposal.valor_custeio|currency }}</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{{ proposal.valor_investimento|currency }}</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">{% if proposal.ciente %}Ciente{% else %}Não Ciente{% endif %}</p>
+                </td>
+                <td>
+                  <div class="d-flex gap-2 align-items-end justify-content-center">
+                    <a class="search" href="{% url 'proposals_parlamentares:ler_proposal' proposal.id %}">{% include 'partials/icons/detalhar.html' %}</a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">
+                  <p class="mb-0 fw-normal fs-4">Nenhuma proposal parlamentar encontrada para este project.</p>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </article>
+      <article class="tab-pane fade" id="beneficiarios" role="tabpanel" aria-labelledby="beneficiarios-tab"
+        tabindex="0">
+        <div class="accordion-body table-responsive p-0">
+          <table class="table text-nowrap mb-0 align-middle">
+            <thead class="text-dark fs-4">
+              <tr>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Beneficiário</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">UF</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Custeio</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Investimento</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Plano de Ação</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Beneficiário</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">UF</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Emenda Parlamentar</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Custeio</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Investimento</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Plano de Ação</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Situação</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
+{% endblock content %}

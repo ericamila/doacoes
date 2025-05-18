@@ -1,0 +1,165 @@
+{% load custom_filters %}
+<div class="modal fade" id="registrarNovo" tabindex="-1" aria-labelledby="novoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content p-3">
+        <div class="modal-header d-flex align-items-center">
+          <h4 class="modal-title" id="novoModalLabel">Relatório de Gestão</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <section class="modal-body">
+          <form method="post" enctype="multipart/form-data" action="{% url 'planos_de_acao:registrar_relatorio_gestao' plano_de_acao.id %}">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label class="form-label" for="valor_executado">{{ relatorio_gestao_form.valor_executado.label }}</label>
+                  {{ relatorio_gestao_form.valor_executado|remove_cursor_not_allowed }}
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label class="form-label" for="natureza_despesa">{{ relatorio_gestao_form.natureza_despesa.label }}</label>
+                  {{ relatorio_gestao_form.natureza_despesa }}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label" for="executor">*Executor</label>
+                  <input type="text" class="form-control" id="executor" name="executor" value="Executor(provisório)" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="arquivos" class="form-label">Selecione os arquivos*</label>
+                  <div class="d-flex align-items-center">
+                    {{ documento.arquivos|add_class:'form-control' }}
+                    <button type="button" id="add-file" class="btn btn-secondary ms-2">+</button>
+                  </div>
+                </div>
+                <ul id="file-list" class="list-group mb-3">
+                  <!-- Lista de arquivos adicionados aqui -->
+                </ul>
+              </div>
+              <div>
+                <div class="mb-3">
+                  <label class="form-label" for="descricao">{{ relatorio_gestao_form.descricao.label }}</label>
+                  {{ relatorio_gestao_form.descricao|remove_cursor_not_allowed }}
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function () {
+                const fileInput = document.getElementById('id_arquivos') // Campo de arquivos
+                const addFileButton = document.getElementById('add-file') // Botão "+"
+                const fileList = document.getElementById('file-list') // Lista de arquivos adicionados
+                const form = document.querySelector('#registrarNovo form') // Formulário do modal
+                const valorExecutadoInput = document.getElementById('id_valor_executado') // Campo de valor executado
+                const naturezaDespesaSelect = document.getElementById('id_natureza_despesa') // Campo de natureza da despesa
+                const executorInput = document.getElementById('executor') // Campo de executor
+                const extensoesPermitidas = ['.jpg', '.jpeg', '.png', '.tiff', '.xls', '.xlsx', '.csv', '.pdf']
+                let files = [] // Array para armazenar os arquivos adicionados
+              
+                // Função para validar arquivos
+                function validarArquivos() {
+                  let isValid = true
+                  let errorMessage = ''
+              
+                  if (fileList.children.length === 0) {
+                    isValid = false
+                    errorMessage += 'É obrigatório adicionar pelo menos um arquivo.\n'
+                  } else {
+                    for (const file of files) {
+                      const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase()
+                      if (!extensoesPermitidas.includes(fileExtension)) {
+                        isValid = false
+                        errorMessage += `O arquivo "${file.name}" não é permitido. Apenas arquivos com as extensões ${extensoesPermitidas.join(', ')} são aceitos.\n`
+                      }
+                    }
+                  }
+              
+                  return { isValid, errorMessage }
+                }
+              
+                // Função para validar campos do formulário
+                function validarFormulario() {
+                  let isValid = true
+                  let errorMessage = ''
+              
+                  if (!valorExecutadoInput.value || parseFloat(valorExecutadoInput.value) <= 0) {
+                    isValid = false
+                    errorMessage += 'O campo "Valor Executado" deve ser preenchido com um valor maior que 0.\n'
+                  }
+              
+                  if (!naturezaDespesaSelect.value) {
+                    isValid = false
+                    errorMessage += 'O campo "Natureza da Despesa" é obrigatório.\n'
+                  }
+              
+                  if (!executorInput.value.trim()) {
+                    isValid = false
+                    errorMessage += 'O campo "Executor" é obrigatório.\n'
+                  }
+              
+                  return { isValid, errorMessage }
+                }
+              
+                // Evento para adicionar arquivos à lista
+                addFileButton.addEventListener('click', () => {
+                  if (fileInput.files.length > 0) {
+                    for (const file of fileInput.files) {
+                      const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase()
+              
+                      if (!extensoesPermitidas.includes(fileExtension)) {
+                        alert(`O arquivo "${file.name}" não é permitido. Apenas arquivos com as extensões ${extensoesPermitidas.join(', ')} são aceitos.`)
+                        continue
+                      }
+              
+                      files.push(file)
+              
+                      const listItem = document.createElement('li')
+                      listItem.className = 'list-group-item d-flex justify-content-between align-items-center'
+                      listItem.textContent = file.name
+              
+                      const removeButton = document.createElement('button')
+                      removeButton.className = 'btn btn-danger btn-sm'
+                      removeButton.textContent = 'Remover'
+                      removeButton.addEventListener('click', () => {
+                        files = files.filter((f) => f !== file)
+                        listItem.remove()
+                      })
+              
+                      listItem.appendChild(removeButton)
+                      fileList.appendChild(listItem)
+                    }
+              
+                    //fileInput.value = ''; // Limpa o campo de arquivos
+                  } else {
+                    alert('Nenhum arquivo selecionado.')
+                  }
+                })
+              
+                // Evento para validar o formulário antes de enviar
+                form.addEventListener('submit', (e) => {
+                  const validacaoArquivos = validarArquivos()
+                  const validacaoFormulario = validarFormulario()
+              
+                  if (!validacaoArquivos.isValid || !validacaoFormulario.isValid) {
+                    e.preventDefault() // Bloqueia o envio do formulário
+                    alert(validacaoArquivos.errorMessage + validacaoFormulario.errorMessage) // Exibe as mensagens de erro
+                  } else {
+                    const dataTransfer = new DataTransfer()
+                    files.forEach((file) => dataTransfer.items.add(file))
+                    fileInput.files = dataTransfer.files
+                  }
+                })
+              })
+            </script>

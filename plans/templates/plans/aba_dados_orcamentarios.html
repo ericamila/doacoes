@@ -1,0 +1,181 @@
+{% load custom_filters %}        
+        <article class="tab-pane fade" id="dados-orcamentarios" role="tabpanel" aria-labelledby="dados-orcamentarios-tab" tabindex="1">
+          <div class="accordion-body p-0">
+            <!-- Empenho -->
+            <h5 class="section-title">Empenhos</h5>
+            <div class="row mb-4">
+              <table class="table text-nowrap mb-0 align-middle">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Código</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor Estornado</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Data</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Processo SEI</h6>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for empenho in empenhos %}
+                    <tr>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.codigo }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.valor|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.valor_estornado|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.get_situacao_display }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.data }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ empenho.processo_sei }}</p>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="6" class="text-center">Nenhum empenho encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Liquidação -->
+            <h5 class="section-title">Liquidações</h5>
+            <div class="row mb-4">
+              <table class="table text-nowrap mb-0 align-middle">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Código</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor Estornado</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Data</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Empenho</h6>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for liquidacao in liquidacoes %}
+                    <tr>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.codigo }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.valor|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.valor_estornado|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.get_situacao_display }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.data }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ liquidacao.empenho.codigo }}</p>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="5" class="text-center">Nenhuma liquidação encontrada</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagamento -->
+            <h5 class="section-title">Pagamentos</h5>
+            <div class="row mb-4">
+              <table class="table text-nowrap mb-0 align-middle">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Código</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Valor Estornado</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Ordem Bancária</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Data</h6>
+                    </th>
+                    <th>
+                      <h6 class="fs-4 fw-semibold mb-0">Liquidação</h6>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for pagamento in pagamentos %}
+                    <tr>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.codigo }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.valor|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.valor_estornado|currency }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.get_situacao_display }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.ordem_bancaria }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.data }}</p>
+                      </td>
+                      <td>
+                        <p class="mb-0 fw-normal fs-4">{{ pagamento.liquidacao.codigo }}</p>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="6" class="text-center">Nenhum pagamento encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>

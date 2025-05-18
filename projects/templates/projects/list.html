@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% load auth %}
+
+{% block content %}
+  {% include 'messages.html' %}
+
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="card-title mb-0">Projetos</h1>
+        {% if user|admin %}
+          <button type="button" class="btn btn-outline-primary border-0 d-flex align-items-center gap-2 text-primary" style="--bs-btn-hover-bg: var(--bs-primary); --bs-btn-hover-color: white;" onmouseover="this.classList.remove('text-primary')" onmouseout="this.classList.add('text-primary')" onclick="window.location.href='{% url 'projects:criar_project' %}'">
+            <i class="ti ti-plus"></i>
+            <span>Cadastrar novo</span>
+          </button>
+        {% endif %}
+      </div>
+
+      <form class="d-flex gap-3 mt-2" action="{% url 'projects:lists' %}" method="GET">
+        <div class="input-group border rounded-1">
+          <span class="input-group-text bg-transparent px-6 border-0" id="basic-addon1"><i class="ti ti-search fs-6"></i></span>
+          <input name="obj" type="text" value="{{ request.GET.obj }}" class="form-control border-0 ps-2" placeholder="Digite o Órgão Repassador" />
+        </div>
+
+        {% if request.GET.obj %}
+          <a class="btn btn-secondary" href="{% url 'projects:list' %}">Reset</a>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center p-2" style="width: 40px; height: 40px;"><i class="ti ti-filter fs-7"></i></button>
+      </form>
+
+      <table class="table text-nowrap mb-0 align-middle mt-4">
+        <thead class="table-light bg-light text-dark fw-bold fs-4">
+          <tr>
+            <th>
+              <h6 class="fs-4 fw-semibold mb-0">Órgão</h6>
+            </th>
+            <th>
+              <h6 class="fs-4 fw-semibold mb-0">Órgão Repassador</h6>
+            </th>
+            <th>
+              <h6 class="fs-4 fw-semibold mb-0">Código</h6>
+            </th>
+            <th>
+              <h6 class="fs-4 fw-semibold mb-0">Ano</h6>
+            </th>
+            <th class="text-center" style="width: 100px;">
+              <h6 class="fs-4 fw-semibold mb-0">Ações</h6>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for project in projects %}
+            <tr>
+              <td>{{ project.orgao_de_origem }}</td>
+              <td>{{ project.orgao_repassador }}</td>
+              <td>{{ project.codigo }}</td>
+              <td>{{ project.ano }}</td>
+              <td>
+                <div class="d-flex gap-2 align-items-center justify-content-end">
+                  <a class="search" href="{% url 'projects:detail' project.id %}" title="Detalhar">{% include 'partials/icons/detalhar.html' %}</a>
+
+                  {% if user|admin %}
+                    <a class="text-info" href="{% url 'projects:edit' project.id %}" title="Editar">{% include 'partials/icons/edit.html' %}</a>
+
+                    <!-- Botão que abre o modal de confirmação -->
+                    <button class="btn p-0 text-danger" title="Excluir" onclick="document.getElementById('confirmDeleteproject{{ project.id }}').classList.remove('d-none')">{% include 'partials/icons/lixeira.html' %}</button>
+
+                    <!-- Modal de confirmação -->
+                    <div id="confirmDeleteproject{{ project.id }}" class="d-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+                      <div style="background: white; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%;">
+                        <p>Tem certeza que deseja remover esta project?</p>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                          <form method="POST" action="{% url 'projects:remove' project.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Confirmar</button>
+                          </form>
+                          <button onclick="document.getElementById('confirmDeleteproject{{ project.id }}').classList.add('d-none')" class="btn btn-sm btn-secondary">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+                  <!-- Fim -->
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">Nenhum project cadastrado</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% include 'partials/paginator.html' %}
+    </div>
+  </div>
+{% endblock %}

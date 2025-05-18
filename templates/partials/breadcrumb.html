@@ -1,0 +1,16 @@
+{% load utils %}
+
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb bg-primary-subtle px-3 py-2 rounded text-primary">
+    <li class="text-black" style="padding-right: var(--bs-breadcrumb-item-padding-x);">/</li>
+    {% for pathpart in request.path|split:'/' %}
+    {% if forloop.counter == request.path|split:'/'|length %}
+    <li class="breadcrumb-item active text-black" aria-current="page">{{pathpart|format_path}}</li>
+    {% else %}
+    <li class="breadcrumb-item d-flex justify-content-center">
+      <a href="{{request.path|get_nth_part_of_url:forloop.counter}}" class="text-primary">{{pathpart|format_path}}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+  </ol>
+</nav>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% extends 'base_general.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}
+  Transfere RR - Login
+{% endblock %}
+
+{% block content %}
+  <div class="col-xl-5 col-xxl-4">
+    <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
+      <div class="auth-max-width col-sm-8 col-md-6 col-xl-7 px-4">
+        <h2 class="mb-1 fs-7 fw-bolder">Bem-vindo ao TransfereRR</h2>
+        <p class="mb-4">Entre na sua conta para continuar</p>
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% endif %} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'users:login' %}">
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field|add_class:'form-control form-control-lg' }}
+            </div>
+          {% endfor %}
+          <div class="d-flex align-items-center justify-content-end mb-4">
+            <a class="text-primary fw-medium fs-3" href="#">Esqueceu a senha?</a>
+          </div>
+          <button class="btn btn-primary w-100 py-8 mb-4 rounded-2" type="submit">Entrar</button>
+          <div class="d-flex align-items-center justify-content-center">
+            <p class="fs-3 mb-0 fw-medium">Não tem uma conta?</p>
+            <a class="text-primary fw-medium ms-2 fs-3" href="{% url 'users:signup' %}">Solicite seu Cadastro</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+</title>
+</head>
+<body>
+
+</body>
+</html>

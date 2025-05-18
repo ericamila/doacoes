@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load custom_filters %} <!-- Carrega os filtro customizado para valor monetário -->
+{% block content %}
+  {% include 'messages.html' %}
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title mb-3">Pagamento</h3>
+      <section class="tab-content" id="pills-tabContent">
+        <div id="campos" class="row">
+          <style>
+            section.tab-content #campos input,
+            section.tab-content #campos span {
+              cursor: not-allowed;
+            }
+            
+            section.tab-content campos input:focus {
+              caret-color: transparent;
+            }
+            
+            section.tab-content *:disabled {
+              background-color: inherit;
+            }
+          </style>
+          {% for field in form %}
+            <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
+              <div class="mb-3">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.name == 'liquidacao' %}
+                  <a class="form-control text-primary fw-bold" href="{% url 'liquidacoes:ler_liquidacao' pagamento.liquidacao.id %}" style="cursor: pointer;">
+                    {{ pagamento.liquidacao.codigo }}
+                    <i class="fas fa-external-link-alt"></i>
+                  </a>
+                {% elif field.name == 'valor' or field.name == 'valor_estornado' %}
+                  <span class="form-control">{{ field.value|currency }}</span>
+                {% elif field.name == 'situacao' %}
+                  <span class="form-control">{{ pagamento.get_situacao_display }}</span>
+                {% else %}
+                  {{ field }}
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'messages.html' %}
+
+
+<div class="card">
+  <div class="card-body">
+    <section class="tab-content" id="pills-tabContent">
+      <article class="tab-pane fade show active" id="dados-do-programa" role="tabpanel"
+        aria-labelledby="dados-do-programa-tab" tabindex="0">
+        <h4 class="card-title mb-3">Adicionar Programa</h4>
+        <form method="post" action="{% url 'programas:criar_programa' %}">
+          {% csrf_token %}
+          <div class="row">
+            {% for field in programa_form %}
+            <div class="col-md-{{ field.field.widget.attrs.col|default:'4' }}">
+              <div class="mb-3">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+              </div>
+            </div>
+            {% endfor %}
+            <div style="text-align: right; margin-bottom: 10px">
+              <button type="submit" class="btn btn-primary gap-6"><i class="ti ti-send fs-4 me-2"></i>Salvar
+                Programa</button>
+            </div>
+          </div>
+        </form>
+      </article>
+      <article class="tab-pane fade" id="beneficiarios" role="tabpanel" aria-labelledby="beneficiarios-tab"
+        tabindex="0">
+        <h4 class="card-title mb-3">Dados dos Beneficiários</h4>
+        <div class="accordion-body table-responsive p-0">
+          <table class="table text-nowrap mb-0 align-middle">
+            <thead class="text-dark fs-4">
+              <tr>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Beneficiário</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">UF</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Emenda Parlamentar</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Custeio</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Investimento</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Plano de Ação</h6>
+                </th>
+                <th>
+                  <h6 class="fs-4 fw-semibold mb-0">Situação</h6>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Beneficiário</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">UF</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Emenda Parlamentar</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Custeio</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Investimento</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Plano de Ação</p>
+                </td>
+                <td>
+                  <p class="mb-0 fw-normal fs-4">Situação</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </div>
+</div>
+{% endblock %}

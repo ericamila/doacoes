@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% load static %}
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
+
+<head>
+  {% include 'partials/head.html' %}
+  <title>{% block title %}{% endblock title %}</title>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <img src="{% static 'images/logos/preloader.svg' %}" alt="loader" class="lds-ripple img-fluid" />
+  </div>
+  <!-- Login -->
+  <div id="main-wrapper" class="auth-customizer-none">
+    <div class="position-relative overflow-hidden radial-gradient min-vh-100 w-100">
+      <div class="position-relative z-index-5">
+        <div class="row">
+          <div class="col-xl-7 col-xxl-8">
+            <a href="{% url 'projects:lists' %}" class="text-nowrap logo-img d-block px-4 py-9 w-100">
+              <img src="{% static 'images/logos/logo.svg' %}" class="dark-logo" alt="Logo-Dark" >
+              <img src="{% static 'images/logos/logo.svg' %}" class="light-logo" alt="Logo-light" >
+            </a>
+            <div class="d-none d-xl-flex align-items-center justify-content-center h-n80">
+              <img src="{% static 'images/backgrounds/login-security.svg' %}" alt="flexy-img" class="img-fluid"
+                width="500" >
+            </div>
+          </div>
+          {% block content %}
+
+          {% endblock content %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dark-transparent sidebartoggler"></div>
+  {% include 'partials/scripts2.html' %}
+</body>
+
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

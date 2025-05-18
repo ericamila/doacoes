@@ -1,0 +1,68 @@
+{% load custom_filters %}
+
+<div class="col-md-11">
+  <div class="row">
+    <div class="col-md-7">
+      <!-- Gráfico de progresso -->
+      <div class="col-md-11">
+        <h6>Progresso do Plano de Ação</h6>
+        <div class="progress" style="height: 25px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width: {{ executado_percentual|floatformat:0 }}%;" aria-valuenow="{{ executado_percentual|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">{{ executado_percentual|floatformat:2 }}%</div>
+        </div>
+      </div>
+      <!-- Gráfico de colunas -->
+      <div class="col-md-11">
+        <canvas id="planoAcaoChart" width="100%" height="45%"></canvas>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+      const ctx = document.getElementById('planoAcaoChart').getContext('2d')
+      const planoAcaoChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Custeio', 'Investimento'],
+          datasets: [
+            {
+              label: 'Total',
+              data: [ {{ plano_de_acao.emenda_parlamentar.valor_custeio|floatformat:0 }}, {{ plano_de_acao.emenda_parlamentar.valor_investimento|floatformat:0 }}],
+              backgroundColor: 'rgba(54, 162, 235, 0.5)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Executado',
+              data: [{{ custeio_executado|default:0|floatformat:0 }}, {{ investimento_executado|default:0|floatformat:0 }}],
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      })
+    </script>
+    </div>
+    <div class="col-md-5">
+      <h6 class="mb-4" >Resumo do Plano de Ação <span class="text-danger">ALTERAR</span></h6>
+      <p>Total do Plano de Ação: {{ valor_total|currency }}</p>
+      <p>Total Executado: {{ total_valor_executado|currency }}</p>
+      <p>Total de Custeio: {{ plano_de_acao.emenda_parlamentar.valor_custeio|currency }}</p>
+      <p>Executado de Custeio: {{ custeio_executado|currency }}</p>
+      <p>Total de Investimento: {{ plano_de_acao.emenda_parlamentar.valor_investimento|currency }}</p>
+      <p>Executado de Investimento: {{ investimento_executado|currency }}</p>
+    </div>
+  </div>
+</div>

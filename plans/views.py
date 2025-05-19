@@ -126,7 +126,7 @@ def remove(request, id):
     plan.removido_em = datetime.now()
     plan.save()
     messages.success(request, "Plano removido com sucesso!")
-    return redirect("plans:list")
+    return redirect("plans:lists")
 
 
 @login_required

@@ -7,9 +7,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from plans.forms import PlanForm
-from plans.views import new
+from plans.views import new as new_plan
 from utils.forms import ContaBancariaForm
 from utils.models import Banco, ContaBancaria
+
 
 
 # Propostas
@@ -108,7 +109,7 @@ def remove(request, id):
         proposal.removido_em = datetime.now()
         proposal.save()
 
-    return redirect("proposals:ler_proposals")
+    return redirect("proposals:lists")
 
 
 @login_required
@@ -127,7 +128,7 @@ def registrar_ciencia(request, id):
                 banco = Banco.objects.get(pk=banco_id)
             except Banco.DoesNotExist:
                 messages.error(request, "Banco inválido.")
-                return redirect("proposals:ler_proposal", id=proposal.id)
+                return redirect("proposals:detail", id=proposal.id)
 
             # Cria ou obtém a conta bancária
             conta_bancaria, created = ContaBancaria.objects.get_or_create(
@@ -144,14 +145,14 @@ def registrar_ciencia(request, id):
             # Pega a lista de políticas públicas selecionadas
             politicas = request.POST.getlist("politicas")
 
-            # Registra plano de ação
-            new(request, proposal.id, politicas)
+            # Registra plano de ação 
+            new_plan(request, proposal.id, politicas)
 
             messages.success(request, "Ciência registrada com sucesso!")
         else:
             messages.error(request, "Todos os campos da conta bancária devem ser preenchidos.")
 
-    return redirect("proposals:ler_proposal", id=proposal.id)
+    return redirect("proposals:detail", id=proposal.id)
 
 
 def remover_ciencia(request, id):
@@ -168,4 +169,4 @@ def remover_ciencia(request, id):
     else:
         messages.error(request, "Erro ao remover a ciência.")
 
-    return redirect("proposals:ler_proposal", id=proposal.id)
+    return redirect("proposals:detail", id=proposal.id)

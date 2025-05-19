@@ -56,31 +56,8 @@ def edit(request, id):
         if form.is_valid():
             form.save()
 
-            # Verificar se há arquivos no request
-            logger.info(f"FILES: {request.FILES}")
-            logger.info(f"POST: {request.POST}")
-            
             # Adicionar novos arquivos
-            if 'arquivos' in request.FILES:
-                arquivos = request.FILES.getlist('arquivos')
-                logger.info(f"Arquivos encontrados: {len(arquivos)}")
-                
-                for arquivo in arquivos:
-                    try:
-                        logger.info(f"Processando arquivo: {arquivo.name}, tamanho: {arquivo.size}")
-                        documento = Document(
-                            accountability=accountability,
-                            caminho=arquivo,
-                            nome=arquivo.name,
-                            tamanho=arquivo.size,
-                        )
-                        documento.save()
-                        logger.info(f"Arquivo salvo com sucesso: {arquivo.name}")
-                    except Exception as e:
-                        logger.error(f"Erro ao salvar arquivo {arquivo.name}: {e}")
-                        messages.error(request, f"Erro ao salvar o arquivo {arquivo.name}: {e}")
-            else:
-                logger.warning("Nenhum arquivo encontrado no request")
+            register_document(request, accountability.id)
 
             messages.success(request, "Prestação de Contas atualizada com sucesso.")
             return redirect(reverse('plans:detail', kwargs={'id': plan_id}) + '#accountability')

@@ -7,10 +7,12 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="section-title">Lista de Relatórios de Gestão</h5>
+              {% if user|admin %}
               <button type="button" class="btn btn-outline-primary border-0 d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#registrarNovo">
                 <span>Registrar novo</span>
                 <i class="ti ti-plus"></i>
               </button>
+              {% endif %}
             </div>
 
             <!-- Modal -->

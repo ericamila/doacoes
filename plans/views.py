@@ -218,4 +218,4 @@ def load_datas(request):
                 messages.error(request, f'Erro ao carregar os dados: {e}')
         else:
             messages.error(request, 'Falha ao ler os dados da planilha.')
-    return redirect("plans:list")
+    return redirect("plans:lists")

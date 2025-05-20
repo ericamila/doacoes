@@ -45,8 +45,9 @@ def signup_view(request):
             messages.success(request, "Usuário cadastrado com sucesso.")
             return redirect("users:login")
         else:
-            messages.error(request, "Erro ao cadastrar o usuário. Verifique os campos.")
-
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Erro no campo {field}: {error}")
     else:
         form = UsuarioForm()
 
@@ -154,7 +155,7 @@ def edit(request, pk):
     user = get_object_or_404(Usuario, pk=pk)
     
     # Verificar se o usuário atual é administrador ou está editando seu próprio perfil
-    if not (request.user.is_superusestaffr or request.user.is_) and request.user.pk != user.pk:
+    if not (request.user.is_superuser or request.user.is_staff) and request.user.pk != user.pk:
         messages.error(request, "Você não tem permissão para editar este usuário.")
         return redirect("users:lists")
 

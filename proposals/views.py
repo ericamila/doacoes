@@ -157,12 +157,11 @@ def registrar_ciencia(request, id):
 
 def remover_ciencia(request, id):
     proposal = get_object_or_404(Proposal, pk=id)
-    print(request.POST.get("sei_remocao_ciente"))
+    
     # Verifica se o método da requisição é POST
-
     if request.method == "POST":
-        proposal.ciente = False  # Marca o campo ciente como False
-        proposal.sei_remocao_ciente = request.POST.get("sei_remocao_ciente")
+        proposal.ciente = False  
+        proposal.processo_remocao_ciente = request.POST.get("processo_remocao_ciente")
         proposal.data_remocao_ciente = datetime.now()
         proposal.save()
         messages.success(request, "Ciência removida com sucesso!")

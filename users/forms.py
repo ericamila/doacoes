@@ -84,6 +84,7 @@ class UsuarioForm(UserCreationForm):
             choices=Usuario._meta.get_field('situacao').choices,
             widget=forms.Select(attrs={"class": "form-select"}),
         )
+        self.fields['situacao'].required = False # Torna o campo opcional
         
         # Se estiver editando um usuário existente
         if self.instance and self.instance.pk:
@@ -146,6 +147,7 @@ class UsuarioLoginForm(AuthenticationForm):
         ),
     )
 
+    # AQUI
     error_messages = {
         'invalid_login': "Email ou senha incorretos. Por favor, tente novamente.",
         'inactive': "Esta conta está inativa. Entre em contato com o administrador.",

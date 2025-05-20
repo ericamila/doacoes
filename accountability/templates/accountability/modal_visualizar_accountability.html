@@ -1,56 +1,133 @@
 {% load custom_filters %}
-  <div class="modal fade" id="visualizaraccountability{{ accountability.id }}" tabindex="-1" aria-labelledby="visualizaraccountabilityModalLabel{{ accountability.id }}" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-      <div class="modal-content p-3">
-        <div class="modal-header d-flex align-items-center">
-          <h4 class="modal-title" id="visualizaraccountabilityModalLabel{{ accountability.id }}">Prestação de Contas - Visualizar</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <section class="modal-body">
-          <div class="row">
-            <div class="col-md-3">
-              <div class="mb-3">
-                <label class="form-label" for="valor_executado">Valor Executado</label>
-                <p class="form-control">{{ accountability.valor_executado|currency }}</p>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="mb-3">
-                <label class="form-label" for="natureza_despesa">Natureza da Despesa</label>
-                <p class="form-control">{{ accountability.get_natureza_despesa_display }}</p>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="mb-3">
-                <label class="form-label" for="executor">Executor</label>
-                <input type="text" class="form-control" id="executor-ver{{ accountability.id }}" name="executor" value="Executor(provisório)" />
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="mb-3">
-                <label class="form-label" for="descricao">Descrição</label>
-                <textarea class="form-control" id="descricao-ver{{ accountability.id }}" name="descricao" rows="3">{{ accountability.descricao }}</textarea>
-              </div>
-            </div>
-            <div class="col-md-6">
+<div class="modal fade" id="visualizaraccountability{{ accountability.id }}" tabindex="-1" aria-labelledby="visualizarModalLabel{{ accountability.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content p-3">
+      <div class="modal-header d-flex align-items-center">
+        <h4 class="modal-title" id="visualizarModalLabel{{ accountability.id }}">Prestação de Contas - Visualizar</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <section class="modal-body">
+        <!-- Abas para Detalhes e Histórico -->
+        <ul class="nav nav-tabs mb-3" id="accountabilityTabs{{ accountability.id }}" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="details-tab{{ accountability.id }}" data-bs-toggle="tab" data-bs-target="#details-tab-pane{{ accountability.id }}" type="button" role="tab" aria-controls="details-tab-pane{{ accountability.id }}" aria-selected="true">Detalhes</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="history-tab{{ accountability.id }}" data-bs-toggle="tab" data-bs-target="#history-tab-pane{{ accountability.id }}" type="button" role="tab" aria-controls="history-tab-pane{{ accountability.id }}" aria-selected="false">Histórico</button>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="accountabilityTabsContent{{ accountability.id }}">
+          <!-- Aba de Detalhes -->
+          <div class="tab-pane fade show active" id="details-tab-pane{{ accountability.id }}" role="tabpanel" aria-labelledby="details-tab{{ accountability.id }}" tabindex="0">
+            <div class="row">
+              <div class="col-md-3">
                 <div class="mb-3">
-                  <label for="arquivos" class="form-label">Arquivos*</label>
+                  <label class="form-label">Valor Executado</label>
+                  <p class="form-control">{{ accountability.valor_executado|currency }}</p>
                 </div>
-                <ul id="file-list-ver{{ accountability.id }}" class="list-group mb-3">
-                  {% for documento in accountability.documentos %}
-                    <li class="list-group-item">
-                      <a href="{{ documento.caminho.url }}" target="_blank">{{ documento.nome }}</a>
-                    </li>
-                  {% empty %}
-                    <li class="list-group-item text-muted">Nenhum arquivo encontrado</li>
-                  {% endfor %}
-                </ul>
+              </div>
+              <div class="col-md-3">
+                <div class="mb-3">
+                  <label class="form-label">Natureza da Despesa</label>
+                  <p class="form-control">{{ accountability.get_natureza_despesa_display }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Executor</label>
+                  <p class="form-control">Executor(provisório)</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Documentos</label>
+                  <ul class="list-group">
+                    {% for documento in accountability.documentos %}
+                      <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ documento.caminho.url }}" target="_blank">{{ documento.nome }}</a>
+                        <span class="badge bg-primary rounded-pill">{{ documento.tamanho|filesizeformat }}</span>
+                      </li>
+                    {% empty %}
+                      <li class="list-group-item text-muted">Nenhum documento encontrado</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              <div>
+                <div class="mb-3">
+                  <label class="form-label">Descrição</label>
+                  <div class="form-control" style="height: auto; min-height: 100px;">{{ accountability.descricao|linebreaks }}</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          
+          <!-- Aba de Histórico -->
+          <div class="tab-pane fade" id="history-tab-pane{{ accountability.id }}" role="tabpanel" aria-labelledby="history-tab{{ accountability.id }}" tabindex="0">
+            <div class="accordion" id="historyAccordion{{ accountability.id }}">
+              {% for version in accountability.history_versions.all %}
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ version.id }}">
+                      Versão {{ version.version_number }} - {{ version.version_date|date:"d/m/Y H:i" }} por {{ version.version_user.first_name }}
+                    </button>
+                  </h2>
+                  <div id="collapse{{ version.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#historyAccordion{{ accountability.id }}">
+                    <div class="accordion-body">
+                      <div class="row">
+                        <!-- Campos com destaque para mudanças -->
+                        <div class="col-md-6">
+                          <p><strong>Valor Executado:</strong> 
+                            <span class="{% if version.valor_executado != accountability.valor_executado %}bg-warning-subtle{% endif %}">
+                              {{ version.valor_executado|currency }}
+                            </span>
+                          </p>
+                        </div>
+                        <div class="col-md-6">
+                          <p><strong>Natureza da Despesa:</strong> 
+                            <span class="{% if version.natureza_despesa != accountability.natureza_despesa %}bg-warning-subtle{% endif %}">
+                              {{ version.get_natureza_despesa_display }}
+                            </span>
+                          </p>
+                        </div>
+                        <div class="col-12">
+                          <p><strong>Descrição:</strong></p>
+                          <div class="{% if version.descricao != accountability.descricao %}bg-warning-subtle{% endif %} p-2 rounded">
+                            {{ version.descricao|linebreaks }}
+                          </div>
+                        </div>
+                        
+                        <!-- Documentos da versão -->
+                        <div class="col-12 mt-3">
+                          <h5>Documentos</h5>
+                          <ul class="list-group">
+                            {% for doc in version.documents.all %}
+                              <li class="list-group-item">
+                                <a href="{{ doc.caminho.url }}" target="_blank">{{ doc.nome }}</a>
+                                <span class="text-muted">({{ doc.tamanho|filesizeformat }})</span>
+                              </li>
+                            {% empty %}
+                              <li class="list-group-item text-muted">Nenhum documento nesta versão</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% empty %}
+                <div class="alert alert-info">
+                  Nenhuma versão anterior encontrada.
+                </div>
+              {% endfor %}
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
       </div>
     </div>
   </div>
+</div>

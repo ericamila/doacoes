@@ -154,7 +154,7 @@ def edit(request, pk):
     user = get_object_or_404(Usuario, pk=pk)
     
     # Verificar se o usuário atual é administrador ou está editando seu próprio perfil
-    if not (request.user.is_superuser or request.user.is_staff) and request.user.pk != user.pk:
+    if not (request.user.is_superusestaffr or request.user.is_) and request.user.pk != user.pk:
         messages.error(request, "Você não tem permissão para editar este usuário.")
         return redirect("users:lists")
 

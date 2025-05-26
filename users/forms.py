@@ -52,7 +52,7 @@ class UsuarioForm(UserCreationForm):
         ),
     )
 
-    municipio = forms.ModelChoiceField(
+    municipios = forms.ModelChoiceField(
         label="Município",
         queryset=Municipio.objects.all().order_by("nome"),
         widget=forms.Select(
@@ -68,7 +68,7 @@ class UsuarioForm(UserCreationForm):
             "password1",
             "cpf",
             "telefone",
-            "municipio",
+            "municipios",
             "codigo_sei",
             "situacao",
         ]
@@ -113,7 +113,7 @@ class UsuarioForm(UserCreationForm):
             user.first_name = self.cleaned_data.get('first_name')
             user.cpf = self.cleaned_data.get('cpf')
             user.telefone = self.cleaned_data.get('telefone')
-            user.municipio = self.cleaned_data.get('municipio')
+            user.municipios = self.cleaned_data.get('municipios')
             user.codigo_sei = self.cleaned_data.get('codigo_sei')
             user.situacao = self.cleaned_data.get('situacao')
             

@@ -125,13 +125,13 @@
           </div>
           
           <div class="col-md-6 mb-3">
-            <label for="{{ form.municipio.id_for_label }}" class="form-label">
-              {{ form.municipio.label }}{% if form.municipio.field.required %}<span class="text-danger">*</span>{% endif %}
+            <label for="{{ form.municipios.id_for_label }}" class="form-label">
+              {{ form.municipios.label }}{% if form.municipios.field.required %}<span class="text-danger">*</span>{% endif %}
             </label>
-            {{ form.municipio }}
-            {% if form.municipio.errors %}
+            {{ form.municipios }}
+            {% if form.municipios.errors %}
               <div class="invalid-feedback d-block">
-                {% for error in form.municipio.errors %}
+                {% for error in form.municipios.errors %}
                   {{ error }}
                 {% endfor %}
               </div>

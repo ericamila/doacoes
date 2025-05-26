@@ -16,7 +16,7 @@
         </div>
 
         {% if request.GET.obj %}
-          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'commitments:ler_commitments' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
+          <a class="btn btn-danger d-flex align-items-center justify-content-center p-2" href="{% url 'commitments:detail' %}" style="width: 40px; height: 40px;"><i class="ti ti-square-x fs-7"></i></a>
         {% endif %}
 
         <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center p-2" style="width: 40px; height: 40px;"><i class="ti ti-filter fs-7"></i></button>

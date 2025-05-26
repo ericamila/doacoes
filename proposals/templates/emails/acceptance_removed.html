@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aceite Removido da Proposta</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .button { display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 3px; }
+        .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
+        .alert { color: #ffc107; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Alerta: Aceite Removido da Proposta</h2>
+        <p>Olá, {{ representative_name }},</p>
+        <p class="alert">O aceite (ciência) da proposta abaixo foi removido por um administrador:</p>
+        <ul>
+            <li><strong>Proposta:</strong> {{ proposal_code }}</li>
+            <li><strong>Projeto:</strong> {{ project_name }}</li>
+            <li><strong>Município:</strong> {{ municipio_name }}</li>
+        </ul>
+        <p>Por favor, verifique a situação da proposta no sistema. Pode ser necessário registrar a ciência novamente se o prazo ainda estiver vigente.</p>
+        <p>
+            <a href="{{ site_url }}{% url 'proposals:ler_proposal' proposal_id %}" class="button">Ver Proposta</a>
+        </p>
+        <p class="footer">Este é um email automático. Por favor, não responda.</p>
+    </div>
+</body>
+</html>

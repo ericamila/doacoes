@@ -17,8 +17,9 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf.urls.static import static
+
+from projects import views
 
 
 handler404 = "utils.views.view_404"
@@ -26,7 +27,8 @@ handler404 = "utils.views.view_404"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
-    path("", include("projects.urls")),
+    path("", views.lists, name="lists"),
+    path("projects/", include("projects.urls")),
     path("proposals/", include("proposals.urls")),
     path("plans/", include("plans.urls")),
     path("accountability/", include("accountability.urls")),

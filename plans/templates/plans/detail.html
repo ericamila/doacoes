@@ -16,7 +16,7 @@
           <strong>Plano:</strong> {{ plan.codigo }}
         </div>
         <div class="col-md-6">
-          <strong>Project:</strong> <a class="text-primary fw-bold" href="{% url 'projects:detail' plan.proposal.id %}" style="cursor: pointer;">{{ plan.proposal.project }} <i class="fas fa-external-link-alt"></i></a>
+          <strong>Projeto:</strong> <a class="text-primary fw-bold" href="{% url 'projects:detail' plan.proposal.project.id %}" style="cursor: pointer;">{{ plan.proposal.project }} <i class="fas fa-external-link-alt"></i></a>
         </div>
       </div>
       <div class="row mt-1">

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.shortcuts import render
 from proposals.forms import ProposalForm
 from proposals.models import Proposal
@@ -10,7 +10,10 @@ from plans.forms import PlanForm
 from plans.views import new as new_plan
 from utils.forms import ContaBancariaForm
 from utils.models import Banco, ContaBancaria
+from .email_utils import send_proposal_notification # Importar função de email
+import logging
 
+logger = logging.getLogger(__name__)
 
 
 # Propostas
@@ -68,11 +71,19 @@ def new(request):
         form = ProposalForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            proposal = form.save()
             messages.success(request, "Proposta enviada com sucesso!")
+
+            # Enviar notificação de nova proposta pendente
+            try:
+                send_proposal_notification(proposal, notification_type="new_pending")
+            except Exception as e:
+                logger.error(f"Erro ao tentar enviar notificação de nova proposta {proposal.id}: {e}")
+                messages.warning(request, "Proposta salva, mas houve um erro ao enviar a notificação por email.")
+
             return redirect("proposals:new")
         else:
-            messages.error(request, "Erro ao salvar o proposal. Verifique os campos.")
+            messages.error(request, "Erro ao salvar a porposta. Verifique os campos.")
     else:
         form = ProposalForm()
 
@@ -91,7 +102,7 @@ def edit(request, id):
             form.save()
             messages.success(request, "Proposta atualizada com sucesso!")
         else:
-            messages.error(request, "Erro ao salvar a proposal. Verifique os campos.")
+            messages.error(request, "Erro ao salvar a proposta. Verifique os campos.")
 
     else:
         form = ProposalForm(instance=proposal)
@@ -146,26 +157,34 @@ def registrar_ciencia(request, id):
             politicas = request.POST.getlist("politicas")
 
             # Registra plano de ação 
-            new_plan(request, proposal.id, politicas)
+            plan = new_plan(request, proposal.id, politicas)
 
             messages.success(request, "Ciência registrada com sucesso!")
         else:
             messages.error(request, "Todos os campos da conta bancária devem ser preenchidos.")
 
-    return redirect("proposals:detail", id=proposal.id)
+    return redirect("plans:detail", id=plan.id)
 
 
 def remover_ciencia(request, id):
     proposal = get_object_or_404(Proposal, pk=id)
-    
-    # Verifica se o método da requisição é POST
+    logger.info(f"Removendo ciência da proposta {id} por usuário {request.user.id}")
+
     if request.method == "POST":
         proposal.ciente = False  
         proposal.processo_remocao_ciente = request.POST.get("processo_remocao_ciente")
         proposal.data_remocao_ciente = datetime.now()
         proposal.save()
         messages.success(request, "Ciência removida com sucesso!")
+ 
+        # Enviar notificação de aceite removido
+        try:
+            send_proposal_notification(proposal, notification_type="acceptance_removed")
+        except Exception as e:
+            logger.error(f"Erro ao tentar enviar notificação de aceite removido para proposta {proposal.id}: {e}")
+            messages.warning(request, "Ciência removida, mas houve um erro ao enviar a notificação por email.")          
+        
     else:
-        messages.error(request, "Erro ao remover a ciência.")
+        messages.error(request, "Erro ao remover a ciência (Método inválido).")
 
     return redirect("proposals:detail", id=proposal.id)

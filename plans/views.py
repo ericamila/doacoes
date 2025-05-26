@@ -113,7 +113,7 @@ def new(request, proposal_id, politicas):
                 print(f"Política pública com ID {politica_id} não encontrada.")
 
         plan.save()
-        return detail
+        return plan
 
     except Exception as e:
         print(f"Erro ao criar Plano: {e}")

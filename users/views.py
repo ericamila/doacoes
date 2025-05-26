@@ -30,30 +30,21 @@ def signup_view(request):
         form = UsuarioForm(request.POST)
 
         if form.is_valid():
-            user = form.save(
-                commit=False
-            )  # Não salva ainda para adicionar campos adicionais
-            user.first_name = form.cleaned_data["first_name"]
-            user.username = form.cleaned_data["email"]
-            user.email = form.cleaned_data["email"]
-            user.cpf = form.cleaned_data["cpf"]
-            user.telefone = form.cleaned_data["telefone"]
-            user.set_password(form.cleaned_data["password1"])
-
-            user.save()
-
+            form.save()
             messages.success(request, "Usuário cadastrado com sucesso.")
             return redirect("users:login")
         else:
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"Erro no campo {field}: {error}")
+            messages.error(request, "Erro ao cadastrar o usuário. Verifique os campos.")
+
     else:
         form = UsuarioForm()
 
     return render(
         request,
-        "users/new.html",  # Corrigido o caminho do template
+        "users/new.html", 
         {
             "form": form,
         },
@@ -72,7 +63,11 @@ def profile_view(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Perfil atualizado com sucesso.")
+            return redirect("users:profile")
         else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Erro no campo {field}: {error}")
             messages.error(request, "Erro ao atualizar o perfil. Verifique os campos.")
     else:
         form = UsuarioForm(instance=user)
@@ -99,6 +94,9 @@ def password_change_view(request):
             messages.success(request, "Senha alterada com sucesso.")
             return redirect("users:profile")
         else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"Erro no campo {field}: {error}")
             messages.error(request, "Erro ao alterar a senha. Verifique os campos.")
     else:
         form = PasswordChangeForm(request.user)
@@ -120,13 +118,13 @@ def lists(request):
         # Busca por email ou nome
         users = users.filter(email__icontains=obj) | users.filter(first_name__icontains=obj)
         # Busca por situação textual
-        situacoes = dict(Usuario._meta.get_field('situacao').choices)
+        situacoes = dict(Usuario._meta.get_field("situacao").choices)
         situacao_map = {v.lower(): k for k, v in situacoes.items()}
         obj_lower = obj.lower()
         if obj_lower in situacao_map:
             users = users | Usuario.objects.filter(situacao=situacao_map[obj_lower])
     else:
-        users = users.order_by('first_name')
+        users = users.order_by("first_name")
 
     paginator = Paginator(users, 10)  # Define 10 itens fixos por página
     page_number = request.GET.get("page")
@@ -169,6 +167,7 @@ def edit(request, pk):
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"Erro no campo {field}: {error}")
+            messages.error(request, "Erro ao atualizar o usuário. Verifique os campos.")
     else:
         form = UsuarioForm(instance=user)
 
@@ -200,10 +199,10 @@ class CustomPasswordResetView(PasswordResetView):
     """
     View customizada para solicitação de recuperação de senha.
     """
-    template_name = 'registration/password_reset_form.html'
+    template_name = "registration/password_reset_form.html"
     form_class = PasswordResetForm
-    email_template_name = 'registration/password_reset_email.html'
-    success_url = reverse_lazy('users:password_reset_done')
+    email_template_name = "registration/password_reset_email.html"
+    success_url = reverse_lazy("users:password_reset_done")
     
     def form_valid(self, form):
         messages.success(self.request, "Um email com instruções para redefinir sua senha foi enviado.")
@@ -217,15 +216,15 @@ class CustomPasswordResetDoneView(PasswordResetDoneView):
     """
     View customizada para confirmação de envio de email de recuperação de senha.
     """
-    template_name = 'registration/password_reset_done.html'
+    template_name = "registration/password_reset_done.html"
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     """
     View customizada para confirmação de nova senha.
     """
-    template_name = 'registration/password_reset_confirm.html'
+    template_name = "registration/password_reset_confirm.html"
     form_class = SetPasswordForm
-    success_url = reverse_lazy('users:password_reset_complete')
+    success_url = reverse_lazy("users:password_reset_complete")
     
     def form_valid(self, form):
         messages.success(self.request, "Sua senha foi alterada com sucesso.")
@@ -239,4 +238,4 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     """
     View customizada para confirmação de alteração de senha.
     """
-    template_name = 'registration/password_reset_complete.html'
+    template_name = "registration/password_reset_complete.html"

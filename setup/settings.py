@@ -147,3 +147,19 @@ LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
 AUTH_USER_MODEL = 'users.Usuario'
+
+
+# Configurações de Email (Exemplo usando Gmail - ajuste para seu provedor)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "ericamila02@gmail.com"  # Seu endereço de email
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # Use senha de aplicativo se usar Gmail com 2FA
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # Email que aparecerá como remetente
+
+# URL Base do Site (Usada nos links dos emails)
+# Certifique-se de que esta URL esteja correta para o seu ambiente
+SITE_URL = "http://localhost:8000" # Ou o domínio de produção
+
+

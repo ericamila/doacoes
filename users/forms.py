@@ -68,31 +68,41 @@ class UsuarioForm(UserCreationForm):
             "password1",
             "cpf",
             "telefone",
+            "tipo_usuario",
+            "situacao",
             "municipios",
             "codigo_sei",
-            "situacao",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Remove o campo password2
+        # Remove o campo  password2, situacao e tipo_usuario do formulário
         self.fields.pop("password2", None)
-        
-        # Adiciona o campo de situação
-        self.fields['situacao'] = forms.ChoiceField(
-            label="Situação",
-            choices=Usuario._meta.get_field('situacao').choices,
-            widget=forms.Select(attrs={"class": "form-select"}),
-        )
-        self.fields['situacao'].required = False # Torna o campo opcional
-        
-        # Se estiver editando um usuário existente
+        self.fields.pop("situacao", None)
+        self.fields.pop("tipo_usuario", None)
+               
+        # Se estiver editando um usuário existente torna o campo de senha opcional
         if self.instance and self.instance.pk:
-            # Torna o campo de senha opcional
             self.fields['password1'].required = False
             
-            # Preenche o campo de situação com o valor atual
-            self.initial['situacao'] = self.instance.situacao
+            # Adiciona o campo de situação
+            self.fields['situacao'] = forms.ChoiceField(
+                initial=self.instance.situacao,
+                required=False,
+                label="Situação",
+                choices=Usuario._meta.get_field('situacao').choices,
+                widget=forms.Select(attrs={"class": "form-select"}),
+            )
+            
+            # Adiciona o campo de tipo_usuario
+            self.fields['tipo_usuario'] = forms.ChoiceField(
+                initial=self.instance.tipo_usuario,
+                required=False,
+                label="Tipo de Usuário",
+                choices=Usuario._meta.get_field('tipo_usuario').choices,
+                widget=forms.Select(attrs={"class": "form-select"}),
+            )
+
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -103,6 +113,7 @@ class UsuarioForm(UserCreationForm):
         if Usuario.objects.filter(username=email).exists():
             raise forms.ValidationError("Este email já está cadastrado.")
         return email
+        
         
     def save(self, commit=True):
         user = super().save(commit=False)

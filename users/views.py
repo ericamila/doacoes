@@ -30,7 +30,14 @@ def signup_view(request):
         form = UsuarioForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            usuario = form.save(
+                commit=False
+            )  # Não salva ainda para adicionar campos adicionais
+            # Define o username como o email
+            usuario.username = form.cleaned_data["email"]
+            usuario.set_password(form.cleaned_data["password1"])
+
+            usuario.save()
             messages.success(request, "Usuário cadastrado com sucesso.")
             return redirect("users:login")
         else:
@@ -112,10 +119,9 @@ def password_change_view(request):
 @login_required
 def lists(request):
     users = Usuario.objects.filter(removido_em=None)
-    obj = request.GET.get("obj")  # Implementa o mecanismo de busca
+    obj = request.GET.get("obj")
 
     if obj:
-        # Busca por email ou nome
         users = users.filter(email__icontains=obj) | users.filter(first_name__icontains=obj)
         # Busca por situação textual
         situacoes = dict(Usuario._meta.get_field("situacao").choices)
@@ -152,7 +158,6 @@ def detail(request, pk):
 def edit(request, pk):
     user = get_object_or_404(Usuario, pk=pk)
     
-    # Verificar se o usuário atual é administrador ou está editando seu próprio perfil
     if not (request.user.is_superuser or request.user.is_staff) and request.user.pk != user.pk:
         messages.error(request, "Você não tem permissão para editar este usuário.")
         return redirect("users:lists")

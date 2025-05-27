@@ -81,9 +81,9 @@ class UsuarioForm(UserCreationForm):
         self.fields.pop("situacao", None)
         self.fields.pop("tipo_usuario", None)
                
-        # Se estiver editando um usuário existente torna o campo de senha opcional
+        # Se estiver editando um usuário existente remove o campo de senha
         if self.instance and self.instance.pk:
-            self.fields['password1'].required = False
+            self.fields.pop("password1", None)
             
             # Adiciona o campo de situação
             self.fields['situacao'] = forms.ChoiceField(
@@ -116,10 +116,9 @@ class UsuarioForm(UserCreationForm):
         
         
     def save(self, commit=True):
-        user = super().save(commit=False)
-        
         # Se estiver editando um usuário existente
         if self.instance and self.instance.pk:
+            user = self.instance
             # Atualiza os campos
             user.first_name = self.cleaned_data.get('first_name')
             user.cpf = self.cleaned_data.get('cpf')
@@ -127,20 +126,21 @@ class UsuarioForm(UserCreationForm):
             user.municipios = self.cleaned_data.get('municipios')
             user.codigo_sei = self.cleaned_data.get('codigo_sei')
             user.situacao = self.cleaned_data.get('situacao')
+            user.tipo_usuario = self.cleaned_data.get('tipo_usuario')
             
-            # Só atualiza a senha se uma nova senha foi fornecida
-            password = self.cleaned_data.get('password1')
-            if password:
-                user.set_password(password)
+            if commit:
+                user.save()
+            return user
         else:
             # Novo usuário
+            user = super().save(commit=False)
             user.username = self.cleaned_data.get('email')
             user.email = self.cleaned_data.get('email')
             user.set_password(self.cleaned_data.get('password1'))
             
-        if commit:
-            user.save()
-        return user
+            if commit:
+                user.save()
+            return user
 
 
 class UsuarioLoginForm(AuthenticationForm):
@@ -158,7 +158,7 @@ class UsuarioLoginForm(AuthenticationForm):
         ),
     )
 
-    # AQUI
+
     error_messages = {
         'invalid_login': "Email ou senha incorretos. Por favor, tente novamente.",
         'inactive': "Esta conta está inativa. Entre em contato com o administrador.",

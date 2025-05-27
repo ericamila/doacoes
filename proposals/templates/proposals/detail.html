@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load custom_filters %} <!-- Carrega os filtro customizado para valor monetário -->
+{% load auth %}
 {% block content %}
   {% include 'messages.html' %}
 
@@ -57,15 +58,23 @@
                     <div class="col-md-6">
                       <span class="form-control">{{ proposal.conta_bancaria }}</span>
                     </div>
+
+                    {% if user|admin %}
                     <div class="col-md-6 d-flex justify-content-end">
                       <button type="button" class="btn btn-primary col-md-4" data-bs-toggle="modal" data-bs-target="#removerCiencia">Remover ciência</button>
                     </div>
+                    {% endif %}
+                    
                   </div>
                 {% else %}
                   <span>Não Ciente</span>
+                  
+                  {% if user|representante_do_municipio_da_proposta:proposal %}
                   <div class="d-flex justify-content-end">
                     <button type="button" class="btn btn-primary col-md-2" data-bs-toggle="modal" data-bs-target="#registrarCiencia">Registar ciência</button>
                   </div>
+                  {% endif %}
+
                   {% if proposal.processo_remocao_ciente %}
                     <p>Ciente removido conforme processo: {{ proposal.processo_remocao_ciente }} em {{ proposal.data_remocao_ciente }}</p>
                   {% endif %}

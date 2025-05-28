@@ -2,7 +2,7 @@
 {% load custom_filters %} <!-- Carrega os filtro customizado para valor monetário -->
 {% load auth %}
 {% block content %}
-  {% include 'messages.html' %}
+{% include 'messages.html' %}
 
   <div class="card">
     <div class="card-body">
@@ -141,13 +141,16 @@
                 </div>
                 <section class="modal-body">
                   <p>Informar o código do processo da solicitação.</p>
-                  <form method="post" action="{% url 'proposals:remover_ciencia' proposal.id %}">
+                  <form method="post" action="{% url 'proposals:remover_ciencia' proposal.id %}" id="removeCienciaForm">
                     {% csrf_token %}
                     <span class="form-label">Código do Processo:</span>
                     <input type="text" name="processo_remocao_ciente" class="form-control" required />
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
-                      <button type="submit" class="btn btn-primary">Remover Ciência</button>
+                      <button type="submit" class="btn btn-primary" id="removeCienciaSubmitButton">
+                        <span id="removeCienciaButtonText">Remover Ciência</span>
+                        <span id="removeCienciaLoadingSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                      </button>
                     </div>
                   </form>
                 </section>
@@ -181,6 +184,32 @@
           textarea.readOnly = true // Torna o campo somente leitura
           textarea.disabled = true // Desabilita o campo
         })
+      }
+      
+      // Script para desabilitar botão de remover ciência
+      const removeCienciaForm = document.getElementById('removeCienciaForm');
+      const removeCienciaSubmitButton = document.getElementById('removeCienciaSubmitButton');
+      const removeCienciaButtonText = document.getElementById('removeCienciaButtonText');
+      const removeCienciaLoadingSpinner = document.getElementById('removeCienciaLoadingSpinner');
+
+      if (removeCienciaForm && removeCienciaSubmitButton) {
+        removeCienciaForm.addEventListener('submit', function(event) {
+          // Previne múltiplos envios
+          if (removeCienciaSubmitButton.disabled) {
+            event.preventDefault();
+            return false;
+          }
+          
+          // Desabilita o botão
+          removeCienciaSubmitButton.disabled = true;
+          
+          // Altera o texto e mostra o spinner
+          if (removeCienciaButtonText) removeCienciaButtonText.textContent = 'Removendo...';
+          if (removeCienciaLoadingSpinner) removeCienciaLoadingSpinner.classList.remove('d-none');
+          
+          // Permite que o formulário seja enviado
+          return true;
+        });
       }
     })
   </script>

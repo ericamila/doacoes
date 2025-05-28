@@ -8,7 +8,7 @@
       <article class="tab-pane fade show active" id="dados-do-proposal" role="tabpanel"
         aria-labelledby="dados-do-proposal-tab" tabindex="0">
         <h4 class="card-title mb-3">Adicionar Proposta</h4>
-        <form method="post" action="{% url 'proposals:new' %}">
+        <form method="post" action="{% url 'proposals:new' %}" id="proposalForm">
           {% csrf_token %}
           <div class="row">
 
@@ -22,8 +22,11 @@
             {% endfor %}
 
             <div style="text-align: right; margin-bottom: 10px">
-              <button type="submit" class="btn btn-primary gap-6"><i class="ti ti-send fs-4 me-2"></i>Salvar
-                Proposta</button>
+              <button type="submit" id="submitButton" class="btn btn-primary gap-6">
+                <i class="ti ti-send fs-4 me-2"></i>
+                <span id="buttonText">Salvar Proposta</span>
+                <span id="loadingSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+              </button>
             </div>
           </div>
         </form>
@@ -32,4 +35,31 @@
     </section>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('proposalForm');
+    const submitButton = document.getElementById('submitButton');
+    const buttonText = document.getElementById('buttonText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    
+    form.addEventListener('submit', function(event) {
+      // Previne múltiplos envios
+      if (submitButton.disabled) {
+        event.preventDefault();
+        return false;
+      }
+      
+      // Desabilita o botão
+      submitButton.disabled = true;
+      
+      // Altera o texto e mostra o spinner
+      buttonText.textContent = 'Salvando...';
+      loadingSpinner.classList.remove('d-none');
+      
+      // Permite que o formulário seja enviado
+      return true;
+    });
+  });
+</script>
 {% endblock %}

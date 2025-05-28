@@ -39,7 +39,7 @@ def send_proposal_notification(proposal, notification_type):
     context = {
         'representative_name': representative.first_name or representative.username,
         'proposal_code': proposal.codigo,
-        'project_name': proposal.project.nome,
+        'project_name': proposal.project.codigo,
         'municipio_name': municipio.nome,
         'proposal_id': proposal.id,
         'project_deadline': proposal.project.data_final_ciencia,

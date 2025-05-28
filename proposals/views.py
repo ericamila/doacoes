@@ -77,6 +77,7 @@ def new(request):
             # Enviar notificação de nova proposta pendente
             try:
                 send_proposal_notification(proposal, notification_type="new_pending")
+                logger.info(request, "Email enviado")
             except Exception as e:
                 logger.error(f"Erro ao tentar enviar notificação de nova proposta {proposal.id}: {e}")
                 messages.warning(request, "Proposta salva, mas houve um erro ao enviar a notificação por email.")
@@ -180,6 +181,7 @@ def remover_ciencia(request, id):
         # Enviar notificação de aceite removido
         try:
             send_proposal_notification(proposal, notification_type="acceptance_removed")
+            logger.info(request, "Email enviado")
         except Exception as e:
             logger.error(f"Erro ao tentar enviar notificação de aceite removido para proposta {proposal.id}: {e}")
             messages.warning(request, "Ciência removida, mas houve um erro ao enviar a notificação por email.")          
